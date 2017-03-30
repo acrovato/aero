@@ -1,0 +1,102 @@
+//// main file
+// Link program modules (pre, solver, post)
+//
+// Variables accessed throughout the code
+//
+// *Geometry*
+// - symY: defines symmetry about Y axis
+// - sRef: reference surface of the full wing
+//
+// *Networks and Field*
+// - bPan: (network of) body panels (structure)
+// - wPan: (network of) wake panels (structure)
+// - fPan: field panels (structure)
+//
+// *Physics*
+// - Minf: freestream Mach number
+// - alpha: freestream angle of attack
+// - vInf: freestream velocity vector
+// - cL: lift coefficient
+// - cD: drag coefficient
+
+//// Acronym
+// - STREAM: Swift Transonic Enhanced Aerodynamic Modeling
+//		JET-STREAM, STEAM
+// - QtAero: Cute Aerodynamics
+// - STAMPD: Swift Transonic Aerodynamic Modeling for Preliminary Design
+// - STAR(PAD): Swift Transonic Aerodynamics (for Preliminary Aircraft Design)
+// - SAMPAD: Swift Aerodynamic Modeling for Preliminary Aircraft Design
+// - CELIA: C - Enhanced Lightweight Aerodynamics
+// - CeLiA: C Library for Aerodynamics
+// - CeLIA: C Library for swIft (or quIck) Aerodynamics
+// - CLELiA: C Library for Enhanced Linear Aerodynamics
+// - ST(R)ELA: Swift Transonic Enhanced Lightweight Aerodynamics
+// - SCALP: Swift Computational Aerodynamic Loads Prediction
+// - AeroMAD: Aerodynamic Modeling for Aircraft Design
+// - ETA: Enhanced Transonic Aerodynamics
+
+#include <iostream>
+#include <Eigen/Dense>
+#include "pre.h"
+#include "solver.h"
+#include "post.h"
+
+using namespace std;
+using namespace Eigen;
+
+int main() {
+
+    // TODO Check all files for #define and add tolerances (TOLG, TOLS, FF,...) to input .cgf file
+
+    //// Variable definition
+	// Geometry
+    bool symY = 0;
+    double sRef = 1;
+	// Freestream
+    double Minf = 0;
+    double alpha = 0;
+    Vector3d vInf(1.0, 0.0, 0.0);
+	// Surface and wake panels
+    // TODO: if several Networks are considered, use std::vector <network>
+	Network bPan;
+	Network wPan;
+	// Field cells
+	Field fPan;
+	// Forces
+    double cL = 0, cD = 0;
+
+    //// Begin flow
+    // Hello World: Fast and Accurate Steady Transonic Aerodynamics for AeroElastic Tailoring
+    time_t now = time(0); // get time now
+    char* localNow = ctime(&now);
+    cout << "Hi! My name is CeLiA v1.0-1704" << endl;
+    cout << "Solver started on " << localNow << endl;
+
+    // Set time counter
+    clock_t start = clock();
+    clock_t startS = clock();
+
+    // Pre-processing
+    pre(symY, sRef, Minf, alpha, vInf, bPan, wPan, fPan);
+    clock_t endS = clock();
+    cout << "Preprocessing time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
+
+    // Solver
+    startS = clock();
+    solver(symY, sRef, alpha, vInf, Minf, bPan, wPan, fPan, cL, cD);
+    endS = clock();
+    cout << "Solver time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
+
+    // Post-processing
+    startS = clock();
+    post(sRef, alpha, Minf, bPan, fPan, cL, cD);
+    endS = clock();
+    cout << "Postprocessing time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
+
+    // Total time
+    clock_t end = clock();
+    cout << "***** Run summary *****" << endl;
+    cout << "Total time: " << (end - start) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
+
+    return 0;
+}
