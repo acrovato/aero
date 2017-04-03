@@ -25,12 +25,11 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include "solver.h"
+#include "id_subpanel.h"
 #include "build_AIC.h"
 #include "solve_body.h"
 #include "solve_field.h"
 #include "compute_sVars.h"
-
-#include "Minigrid.h"
 
 #define NDIM 3
 #define EPS 1e-5
@@ -54,7 +53,7 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
     Body2field_AIC b2fAIC; // body to field
     Field_AIC f2fAIC, f2bAIC; // field to field and field to body
     Minigrid_AIC mgAIC; // field to field and field to body (minigrid)
-    //Subpanel_AIC spAIC; // body to field (subpanel)
+    Subpanel_AIC spAIC; // body to field (sub-panel)
 
     // Singularities
     bPan.tau.resize(bPan.nP);
@@ -90,6 +89,10 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
     mgVar.UYfwd.resize(fPan.nF, NDIM);
     mgVar.UZbwd.resize(fPan.nF, NDIM);
     mgVar.UZfwd.resize(fPan.nF, NDIM);
+    Subpanel sp; // Sub-panels
+
+    //// Identify sub-panels
+    id_subpanel(bPan, fPan, sp, spAIC);
 
     //// Build AIC matrices
     build_AIC(symY, bPan, wPan, fPan, b2bAIC, b2fAIC, f2fAIC, f2bAIC, mgAIC);
@@ -99,7 +102,7 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
     if (Minf != 0) {
         cout << "|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|" << endl;
         cout << "|Compressible computation.|" << endl;
-        cout << "|_________________________|" << endl << endl;
+        cout << " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ " << endl << endl;
         do {
             // Store new field sources
             sigmaTmp = fPan.sigma;
@@ -132,7 +135,7 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
     else {
         cout << "|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|" << endl;
         cout << "|Incompressible computation.|" << endl;
-        cout << "|___________________________|" << endl << endl;
+        cout << " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ " << endl << endl;
         solve_body(vInf, RHS, vSigma, bPan, b2bAIC);
     }
 

@@ -1081,5 +1081,5 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     }
 
     //// Control display
-    cout << "Done!" << endl;
+    cout << "Done!" << endl << endl;
 }

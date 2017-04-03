@@ -13,7 +13,7 @@ set(SOURCE_FILES src/main.cpp
             src/create_field.cpp
             src/map_field.cpp
         src/solver.cpp
-            #src/id_subpanel.cpp
+            src/id_subpanel.cpp
             src/build_AIC.cpp
                 src/infcBB.cpp
                 #src/split_panel.cpp
