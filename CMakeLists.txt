@@ -16,7 +16,7 @@ set(SOURCE_FILES src/main.cpp
             src/id_subpanel.cpp
             src/build_AIC.cpp
                 src/infcBB.cpp
-                #src/split_panel.cpp
+                src/split_panel.cpp
                     src/infcBF.cpp
         src/infcF.cpp
             src/solve_body.cpp

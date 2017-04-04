@@ -46,7 +46,7 @@ using namespace Eigen;
 
 int main() {
 
-    // TODO Check all files for #define and add tolerances (TOLG, TOLS, FF,...) to input .cgf file
+    // TODO Check all files for #define and add them (TOLG, TOLS, NS,...) to input .cgf file
 
     //// Variable definition
 	// Geometry

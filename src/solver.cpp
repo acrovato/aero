@@ -95,7 +95,7 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
     id_subpanel(bPan, fPan, sp, spAIC);
 
     //// Build AIC matrices
-    build_AIC(symY, bPan, wPan, fPan, b2bAIC, b2fAIC, f2fAIC, f2bAIC, mgAIC);
+    build_AIC(symY, bPan, wPan, fPan, b2bAIC, b2fAIC, f2fAIC, f2bAIC, mgAIC, sp, spAIC);
 
     //// Solver
     // Field Panel Method

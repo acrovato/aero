@@ -7,8 +7,11 @@
 #include "Body2field_AIC.h"
 #include "Field_AIC.h"
 #include "Minigrid_AIC.h"
+#include "Subpanel.h"
+#include "Subpanel_AIC.h"
 
 void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
-               Body_AIC &b2bAIC, Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Field_AIC &f2bAIC, Minigrid_AIC &mgAIC);
+               Body_AIC &b2bAIC, Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Field_AIC &f2bAIC, Minigrid_AIC &mgAIC,
+               Subpanel &sp, Subpanel_AIC &spAIC);
 
 #endif //FPMV1_AIC_H
