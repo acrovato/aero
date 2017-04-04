@@ -15,14 +15,16 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include "compute_fVars.h"
+#include "interp_ctv.h"
+#include "interp_sp.h"
 
 #define GAMMA 1.4
 
 using namespace std;
 using namespace Eigen;
 
-void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, MatrixX3d &dRho,
-                       Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC) {
+void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, Subpanel &sp, MatrixX3d &dRho,
+                       Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC, Subpanel_AIC &spAIC) {
 
     int idx; // temporary counter
 
@@ -50,6 +52,56 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
     mgVar.UZfwd.col(0) = mgAIC.BuZfwd * bPan.tau + mgAIC.AuZfwd * bPan.mu + mgAIC.CuZfwd * fPan.sigma;
     mgVar.UZfwd.col(1) = mgAIC.BvZfwd * bPan.tau + mgAIC.AvZfwd * bPan.mu + mgAIC.CvZfwd * fPan.sigma;
     mgVar.UZfwd.col(2) = mgAIC.BwZfwd * bPan.tau + mgAIC.AwZfwd * bPan.mu + mgAIC.CwZfwd * fPan.sigma;
+
+    // Perturbation velocity (with sub-paneling technique)
+    int NS = 16;
+    MatrixXd vSing; vSing.resize(4,2); // corner interpolated singularities
+    MatrixXd sInterp; sInterp.resize(NS,2); // sub-panel interoplated singularities
+    int j, ii;
+    int jj = 0;
+    bool FLAG;
+    for (int m = 0; m < bPan.nS_; m++) {
+        for (int n = 0; n < bPan.nC_; n++) {
+
+            j = n + m * bPan.nC_; // panel index
+            // Interpolation on sub-panel
+            if (j == sp.sI[jj]) {
+                // Interpolation of singularities from centers to vertices
+                vSing = interp_ctv(j, n, m, bPan);
+                // Interpolation of singularities from vertices to sub-panel
+                sInterp = interp_sp(j, bPan, vSing(0,0), vSing(1,0), vSing(2,0), vSing(3,0),
+                                    vSing(0,1), vSing(0,1), vSing(2,1), vSing(3,1));
+            }
+            else
+                continue;
+
+            // Loop reset
+            FLAG = 0;
+            ii = 0;
+            for (int i = 0; i < fPan.nF; i++) {
+                // Body-induced velocity computation if subpanel
+                if (j == sp.sI[j] && i == sp.fI[jj][ii]) {
+                    for (int k = 0; k < NS; k++) {
+                        fPan.U(i,0) += spAIC.Au[jj](ii,k) * sInterp(k,0) + spAIC.Bu[jj](ii,k) * sInterp(k,1);
+                        fPan.U(i,1) += spAIC.Av[jj](ii,k) * sInterp(k,0) + spAIC.Bv[jj](ii,k) * sInterp(k,1);
+                        fPan.U(i,2) += spAIC.Aw[jj](ii,k) * sInterp(k,0) + spAIC.Bw[jj](ii,k) * sInterp(k,1);
+                    }
+
+                    // Set flags
+                    if (ii == 0)
+                        FLAG = 1;
+                    if (ii < sp.fI[jj].size())
+                        ii++;
+                }
+                else
+                    continue;
+
+                if (i == fPan.nF-1 && FLAG && jj < sp.sI.size())
+                    jj++;
+            }
+        }
+    }
+
 
     // Freestream component
     for (int i = 0; i < fPan.nE; ++i) {
@@ -129,5 +181,4 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
                 1 + (GAMMA - 1) / 2 * Minf * Minf * (1 - mgVar.UZfwd.row(idx).dot(mgVar.UZfwd.row(idx))),
                 1 / (GAMMA - 1));
     }
-
 }

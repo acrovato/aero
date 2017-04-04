@@ -69,12 +69,15 @@ int main() {
     // Hello World: Fast and Accurate Steady Transonic Aerodynamics for AeroElastic Tailoring
     time_t now = time(0); // get time now
     char* localNow = ctime(&now);
-    cout << "********************************" << endl;
-    cout << "*   ____     _     _    __     *" << endl;
-    cout << "*  /  __|__ | |   (_)  /  \\    *" << endl;
-    cout << "* (  |__|__|| |__ | | / /\\ \\   *" << endl;
-    cout << "*  \\____|__ |____||_|/_/¯¯\\_\\  *" << endl;
-    cout << "********************************" << endl << endl;
+    cout << "**********************************" << endl;
+    cout << "**             \\_/              **" << endl;
+    cout << "**     \\______O(_)O_______/     **" << endl;
+    cout << "**                              **" << endl;
+    cout << "**   ____     _     _    __     **" << endl;
+    cout << "**  /  __|__ | |   (_)  /  \\    **" << endl;
+    cout << "** (  |__|__|| |__ | | / /\\ \\   **" << endl;
+    cout << "**  \\____|__ |____||_|/_/¯¯\\_\\  **" << endl;
+    cout << "**********************************" << endl << endl;
     cout << "Hi! My name is CeLiA v1.0-1704" << endl;
     cout << "Solver started on " << localNow << endl;
 

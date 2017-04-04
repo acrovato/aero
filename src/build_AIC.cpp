@@ -363,7 +363,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 if (ii == 0)
                     FLAG = 1;
                 if (ii < sp.fI[jj].size())
-                    i++;
+                    ii++;
             }
             else {
                 // Center

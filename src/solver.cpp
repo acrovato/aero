@@ -109,7 +109,7 @@ int solver(bool symY, double sRef, double alpha, Vector3d &vInf, double Minf,
             // Panel prediction and boundary condition
             solve_body(vInf, RHS, vSigma, bPan, b2bAIC);
             // Field correction
-            solve_field(Minf, vInf, bPan, fPan, mgVar, dRho,  b2fAIC, f2fAIC, mgAIC);
+            solve_field(Minf, vInf, bPan, fPan, mgVar, sp, dRho,  b2fAIC, f2fAIC, mgAIC, spAIC);
             // Source induced velocity (to recompute B.C.)
             vSigma.col(0) = f2bAIC.Cu * fPan.sigma;
             vSigma.col(1) = f2bAIC.Cv * fPan.sigma;

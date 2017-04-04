@@ -21,10 +21,10 @@ set(SOURCE_FILES src/main.cpp
         src/infcF.cpp
             src/solve_body.cpp
             src/solve_field.cpp
-        src/compute_fVars.cpp
-                    #interp_ctv
-                    #interp_sp
-                        #interp
+                src/compute_fVars.cpp
+                    src/interp_ctv
+                        src/interp_sp
+                    src/interp
         src/compute_sVars.cpp
         src/post.cpp
             src/write_sp.cpp

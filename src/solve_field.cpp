@@ -23,8 +23,8 @@ using  namespace Eigen;
 #define GAMMA 1.4
 #define M_C 1.0
 
-void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, MatrixX3d &dRho,
-                 Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC) {
+void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, Subpanel &sp, MatrixX3d &dRho,
+                 Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC, Subpanel_AIC &spAIC) {
 
     int idx; // counter
 
@@ -32,7 +32,7 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigr
     cout << "Computing field variables... " << flush;
 
     //// Field variables
-    compute_fVars(Minf, vInf, bPan, fPan, mgVar, dRho,b2fAIC,f2fAIC, mgAIC);
+    compute_fVars(Minf, vInf, bPan, fPan, mgVar, sp, dRho, b2fAIC, f2fAIC, mgAIC, spAIC);
 
     //// Field sources
     // X-derivative of density
