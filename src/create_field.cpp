@@ -26,7 +26,7 @@ void create_field(array<array<double, 3>, 8> &box, Field &fPan) {
     int idx = 0;
 
     //// Begin
-    cout << "Creating field cells... ";
+    cout << "Creating field cells... " << flush;
 
     // Resize field matrices
     fPan.CG.resize(fPan.nF, NDIM);

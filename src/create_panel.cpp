@@ -24,7 +24,7 @@ void create_panel(MatrixX3d &sGrid, Network &bPan) {
     Vector3d v1(NDIM), v2(NDIM);
 
     //// Begin
-    cout << "Creating panels... ";
+    cout << "Creating panels... " << flush;
 
     // Resizing network matrices
     bPan.CG.resize(bPan.nP, NDIM);

@@ -39,7 +39,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     array<double,3> coeffF; // field influence container
 
     //// Begin
-    cout << "Building AIC matrices... ";
+    cout << "Building AIC matrices... " << flush;
 
     // Resize AIC matrices (regular)
     b2bAIC.A.resize(bPan.nP, bPan.nP);
@@ -1079,7 +1079,6 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             }
         }
     }
-
     //// Control display
     cout << "Done!" << endl << endl;
 }

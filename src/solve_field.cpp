@@ -29,7 +29,7 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigr
     int idx; // counter
 
     //// Begin
-    cout << "Computing field variables... ";
+    cout << "Computing field variables... " << flush;
 
     //// Field variables
     compute_fVars(Minf, vInf, bPan, fPan, mgVar, dRho,b2fAIC,f2fAIC, mgAIC);

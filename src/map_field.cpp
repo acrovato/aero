@@ -31,7 +31,7 @@ void map_field(MatrixX3d &sGrid, Network &bPan, Field &fPan) {
     dotPrd.resize(bPan.nP);
 
     //// Begin
-    cout << "Mapping field cells...";
+    cout << "Mapping field cells... " << flush;
 
     // Resize field and network matrices
     fPan.fMap.resize(fPan.nF);

@@ -22,7 +22,7 @@ using namespace Eigen;
 void solve_body(Vector3d &vInf, VectorXd &RHS, MatrixX3d &vSigma, Network &bPan, Body_AIC &b2bAIC) {
 
     //// Begin
-    cout << "Computing surface singularities... ";
+    cout << "Computing surface singularities... " << flush;
 
     //// Update B.C.
     // BC: tau_i = n_i * V_inf + n_i * V_sigma

@@ -26,7 +26,7 @@ void create_wake(MatrixX3d &sGrid, Network &bPan, Network &wPan) {
     int c2, c3;
 
     //// Begin
-    cout << "Creating wake panels... ";
+    cout << "Creating wake panels... " << flush;
 
     // Set number of panels (currently only handles predefined wakes)
     wPan.nC = 2;
