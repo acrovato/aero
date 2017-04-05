@@ -21,8 +21,6 @@
 #include "infcF.h"
 #include "split_panel.h"
 
-#define NS 16
-
 using namespace std;
 using namespace Eigen;
 
@@ -41,12 +39,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     array<double, 6> coeffBF; // body to field influence container
 
     array<RowVectorXd, 6> coeffSP; // body to field influence container for subpanel
-    coeffSP[0].resize(NS);
-    coeffSP[1].resize(NS);
-    coeffSP[2].resize(NS);
-    coeffSP[3].resize(NS);
-    coeffSP[4].resize(NS);
-    coeffSP[5].resize(NS);
+    coeffSP[0].resize(sp.NS);
+    coeffSP[1].resize(sp.NS);
+    coeffSP[2].resize(sp.NS);
+    coeffSP[3].resize(sp.NS);
+    coeffSP[4].resize(sp.NS);
+    coeffSP[5].resize(sp.NS);
 
     array<double,2> xC, yC, zC; // cell vertices
     double x, y, z; // cell center
@@ -163,7 +161,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
         FLAG = 0;
         for (int i = 0; i < fPan.nF; ++i) {
             // Split panel and store AIC
-            if (j == sp.sI[jj] && i == sp.fI[jj][ii]) {
+            if (sp.sI.size() != 0 && j == sp.sI[jj] && i == sp.fI[jj][ii]) {
                 /// Center
                 dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
                 dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
@@ -172,7 +170,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = fPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -200,7 +198,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(0) -= fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -228,7 +226,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(0) += fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -256,7 +254,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(1) -= fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -284,7 +282,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(1) += fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -312,7 +310,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(2) -= fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
@@ -340,7 +338,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc(2) += fPan.deltaMG;
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       trsfColloc(0), trsfColloc(1), dist(2),
                                       bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),

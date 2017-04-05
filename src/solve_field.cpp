@@ -7,10 +7,12 @@
 // - bPan: (network of) body panels (structure)
 // - fPan: field panels (structure)
 // - mgVar: field variabes for minigrid (structure)
+// - sp: subpanels indices (structure)
 // - dRho : derivative of density
 // - b2fAIC: body to field AIC (structure)
 // - f2fAIC: field to field AIC (structure)
 // - mgAIC: body to field AIC for minigrid (structure)
+// - spAIC: body to field AIC for subpanels (structure)
 
 #include <iostream>
 #include <Eigen/Dense>

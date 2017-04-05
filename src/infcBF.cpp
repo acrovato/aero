@@ -20,8 +20,8 @@
 #include "infcBF.h"
 
 #define PI 3.14159
-#define ALPHA 0.2 // ALPHA is the smoothing parameter for doublets. Its value should be ~[.2, .1] (check refs)
-#define BETA 0.05 // BETA is the smoothing parameter for source (U,V). Its value should be ~[.05, .1] (check refs)
+#define ALPHA 1e-6//0.2 // ALPHA is the smoothing parameter for doublets. Its value should be ~[.2, .1] (check refs)
+#define BETA 1e-6//0.05 // BETA is the smoothing parameter for source (U,V). Its value should be ~[.05, .1] (check refs)
 
 using namespace std;
 using namespace Eigen;

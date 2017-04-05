@@ -10,16 +10,14 @@
 // Output:
 // - spis: interpolated singularities (row = sub-panel number; col 0 = doublet, col 1 = source)
 
+#include <iostream>
 #include <Eigen/Dense>
 #include "interp_sp.h"
 #include "interp.h"
 
-#define NS 16
-#define NSs 4
-
 using namespace Eigen;
 
-MatrixXd interp_sp(int idP, Network &bPan,
+MatrixXd interp_sp(int idP, Network &bPan, Subpanel &sp,
                    double mu0, double mu1, double mu2, double mu3,
                    double tau0, double tau1, double tau2, double tau3) {
 
@@ -28,7 +26,7 @@ MatrixXd interp_sp(int idP, Network &bPan,
     double a, b; // interpolation parameters
     double X, Y, Z; // sub-panel center
     MatrixXd spis; // Interpolated singularities
-    spis.resize(NS, 2);
+    spis.resize(sp.NS, 2);
 
     // Copy vertices ton local variables
     x0 = bPan.v0(idP,0);
@@ -44,13 +42,14 @@ MatrixXd interp_sp(int idP, Network &bPan,
     z2 = bPan.v2(idP,2);
     z3 = bPan.v3(idP,2);
 
-    // Computation of subpanel centers in gloabl axes
-    int idx = 0;
-    for (int j = 0; j < NSs; j++) {
-        for (int i = 0; i < NSs; i++) {
+    // Computation of sub-panel centers in global axes
+    int idx = 0, j = 0;
+    for (int jj = 0; jj < sp.NSs; jj++) {
+        int i = 0;
+        for (int ii = 0; ii < sp.NSs; ii++) {
             // Compute weight factors
-            a = (double) (i+1)/NSs/2;
-            b = (double) (j+1)/NSs/2;
+            a = (double) (i+1)/sp.NSs/2;
+            b = (double) (j+1)/sp.NSs/2;
             // Compute center point
             X = (1-b)*((1-a)*x0 + a*x1) + b*(a*x2 + (1-a)*x3);
             Y = (1-b)*((1-a)*y0 + a*y1) + b*(a*y2 + (1-a)*y3);
@@ -63,9 +62,10 @@ MatrixXd interp_sp(int idP, Network &bPan,
             spis(idx,1) = interp(x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3,
                                  tau0, tau1, tau2, tau3,
                                  X, Y, Z);
-            i++;
+            idx++;
+            i += 2;
         }
-        j++;
+        j += 2;
     }
     return spis;
 }

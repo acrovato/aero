@@ -8,13 +8,10 @@
 #include "split_panel.h"
 #include "infcBF.h"
 
-#define NS 16
-#define NSs 4 // sqrt(NS)
-
 using namespace std;
 using namespace Eigen;
 
-array<RowVectorXd,6> split_panel(double x1, double x2, double x3, double x4,
+array<RowVectorXd,6> split_panel(int NS, int NSs, double x1, double x2, double x3, double x4,
                                  double y1, double y2, double y3, double y4,
                                  double x, double y, double z,
                                  double l0, double l1, double l2,

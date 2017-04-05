@@ -16,6 +16,9 @@
 #include "interp_ctv.h"
 #include <interp.h>
 
+#define NDIM 3
+#define NV 4
+
 using namespace std;
 using namespace Eigen;
 
@@ -24,11 +27,11 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
     //// Initialization
     // Temporary
     MatrixXd v; // vertices coordinates
-    v.resize(4, 3);
+    v.resize(NV, NDIM);
     MatrixXi c; // centers (corner of interpolation)
-    c.resize(4, 4);
+    c.resize(NV, 4);
     MatrixXd vis; // interpolated singularities on vertices
-    vis.resize(4, 2);
+    vis.resize(NV, 2);
 
     // Store vertices coordinates
     v.row(0) = bPan.v0.row(idG);
@@ -80,10 +83,10 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
             c(0,1) = idG;
             c(0,2) = idG + bPan.nC_;
             c(0,3) = idG - 1 + bPan.nC_;
-            c(1,0) = idG - 1;
-            c(1,1) = idG;
-            c(1,2) = idG + bPan.nC_;
-            c(1,3) = idG - 1 + bPan.nC_;
+            c(1,0) = idG;
+            c(1,1) = idG + 1;
+            c(1,2) = idG + 1 + bPan.nC_;
+            c(1,3) = idG + bPan.nC_;
             c(2,0) = idG;
             c(2,1) = idG + 1;
             c(2,2) = idG + 1 + bPan.nC_;
@@ -170,7 +173,7 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
     }
 
     //// Interpolate each vertex
-    for (int l = 0; l < 3; l++) {
+    for (int l = 0; l < NV; l++) {
         vis(l,0) = interp(bPan.CG(c(l,0),0), bPan.CG(c(l,0),1), bPan.CG(c(l,0),2),
                           bPan.CG(c(l,1),0), bPan.CG(c(l,1),1), bPan.CG(c(l,1),2),
                           bPan.CG(c(l,2),0), bPan.CG(c(l,2),1), bPan.CG(c(l,2),2),

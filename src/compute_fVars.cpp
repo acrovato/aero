@@ -7,10 +7,12 @@
 // - bPan: (network of) body panels (structure)
 // - fPan: field panels (structure)
 // - mgVar: field variabes for minigrid (structure)
+// - sp: subpanels indices (structure)
 // - dRho : derivative of density
 // - b2fAIC: body to field AIC (structure)
 // - f2fAIC: field to field AIC (structure)
 // - mgAIC: body to field AIC for minigrid (structure)
+// - spAIC: body to field AIC for subpanels (structure)
 
 #include <iostream>
 #include <Eigen/Dense>
@@ -19,6 +21,7 @@
 #include "interp_sp.h"
 
 #define GAMMA 1.4
+#define NV 4 // number of vertices
 
 using namespace std;
 using namespace Eigen;
@@ -26,7 +29,13 @@ using namespace Eigen;
 void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, Subpanel &sp, MatrixX3d &dRho,
                        Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC, Subpanel_AIC &spAIC) {
 
-    int idx; // temporary counter
+    //// Initialization
+    // Temporary variables
+    int idx; // counter
+    MatrixXd vSing; // corner interpolated singularities
+    vSing.resize(NV,2);
+    MatrixXd sInterp; // sub-panel interoplated singularities
+    sInterp.resize(sp.NS,2);
 
     //// Velocity
     // Perturbation velocity
@@ -54,54 +63,47 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
     mgVar.UZfwd.col(2) = mgAIC.BwZfwd * bPan.tau + mgAIC.AwZfwd * bPan.mu + mgAIC.CwZfwd * fPan.sigma;
 
     // Perturbation velocity (with sub-paneling technique)
-    int NS = 16;
-    MatrixXd vSing; vSing.resize(4,2); // corner interpolated singularities
-    MatrixXd sInterp; sInterp.resize(NS,2); // sub-panel interoplated singularities
-    int j, ii;
-    int jj = 0;
-    bool FLAG;
-    for (int m = 0; m < bPan.nS_; m++) {
-        for (int n = 0; n < bPan.nC_; n++) {
+    for (int jj = 0; jj < sp.sI.size(); jj++) {
+    //for (int jj = 0; jj < 1; jj++) {
+        int j = sp.sI[jj]; // panel global index
+        int n = j % bPan.nC_; // panel chordwise index
+        int m = j / bPan.nC_; // panel spanwise index
+        // Interpolation of singularities from centers to vertices
+        vSing = interp_ctv(j, n, m, bPan);
+        // Interpolation of singularities from vertices to sub-panel
+        sInterp = interp_sp(j, bPan, sp, vSing(0,0), vSing(1,0), vSing(2,0), vSing(3,0),
+                            vSing(0,1), vSing(0,1), vSing(2,1), vSing(3,1));
 
-            j = n + m * bPan.nC_; // panel index
-            // Interpolation on sub-panel
-            if (j == sp.sI[jj]) {
-                // Interpolation of singularities from centers to vertices
-                vSing = interp_ctv(j, n, m, bPan);
-                // Interpolation of singularities from vertices to sub-panel
-                sInterp = interp_sp(j, bPan, vSing(0,0), vSing(1,0), vSing(2,0), vSing(3,0),
-                                    vSing(0,1), vSing(0,1), vSing(2,1), vSing(3,1));
-            }
-            else
-                continue;
-
-            // Loop reset
-            FLAG = 0;
-            ii = 0;
-            for (int i = 0; i < fPan.nF; i++) {
-                // Body-induced velocity computation if subpanel
-                if (j == sp.sI[j] && i == sp.fI[jj][ii]) {
-                    for (int k = 0; k < NS; k++) {
-                        fPan.U(i,0) += spAIC.Au[jj](ii,k) * sInterp(k,0) + spAIC.Bu[jj](ii,k) * sInterp(k,1);
-                        fPan.U(i,1) += spAIC.Av[jj](ii,k) * sInterp(k,0) + spAIC.Bv[jj](ii,k) * sInterp(k,1);
-                        fPan.U(i,2) += spAIC.Aw[jj](ii,k) * sInterp(k,0) + spAIC.Bw[jj](ii,k) * sInterp(k,1);
-                    }
-
-                    // Set flags
-                    if (ii == 0)
-                        FLAG = 1;
-                    if (ii < sp.fI[jj].size())
-                        ii++;
-                }
-                else
-                    continue;
-
-                if (i == fPan.nF-1 && FLAG && jj < sp.sI.size())
-                    jj++;
+        for (int ii = 0; ii < sp.fI[jj].size(); ii++) {
+            int i = sp.fI[jj][ii]; // cell index
+            // Velocity induces by each sub-panel
+            for (int k = 0; k < sp.NS; k++) {
+                // Cell center
+                fPan.U(i,0) += spAIC.Au[jj](ii,k) * sInterp(k,0) + spAIC.Bu[jj](ii,k) * sInterp(k,1);
+                fPan.U(i,1) += spAIC.Av[jj](ii,k) * sInterp(k,0) + spAIC.Bv[jj](ii,k) * sInterp(k,1);
+                fPan.U(i,2) += spAIC.Aw[jj](ii,k) * sInterp(k,0) + spAIC.Bw[jj](ii,k) * sInterp(k,1);
+                // Minigrid
+                mgVar.UXbwd(i,0) += spAIC.AuXbwd[jj](ii,k) * sInterp(k,0) + spAIC.BuXbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UXbwd(i,1) += spAIC.AvXbwd[jj](ii,k) * sInterp(k,0) + spAIC.BvXbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UXbwd(i,2) += spAIC.AwXbwd[jj](ii,k) * sInterp(k,0) + spAIC.BwXbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UXfwd(i,0) += spAIC.AuXfwd[jj](ii,k) * sInterp(k,0) + spAIC.BuXfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UXfwd(i,1) += spAIC.AvXfwd[jj](ii,k) * sInterp(k,0) + spAIC.BvXfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UXfwd(i,2) += spAIC.AwXfwd[jj](ii,k) * sInterp(k,0) + spAIC.BwXfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYbwd(i,0) += spAIC.AuYbwd[jj](ii,k) * sInterp(k,0) + spAIC.BuYbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYbwd(i,1) += spAIC.AvYbwd[jj](ii,k) * sInterp(k,0) + spAIC.BvYbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYbwd(i,2) += spAIC.AwYbwd[jj](ii,k) * sInterp(k,0) + spAIC.BwYbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYfwd(i,0) += spAIC.AuYfwd[jj](ii,k) * sInterp(k,0) + spAIC.BuYfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYfwd(i,1) += spAIC.AvYfwd[jj](ii,k) * sInterp(k,0) + spAIC.BvYfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UYfwd(i,2) += spAIC.AwYfwd[jj](ii,k) * sInterp(k,0) + spAIC.BwYfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZbwd(i,0) += spAIC.AuZbwd[jj](ii,k) * sInterp(k,0) + spAIC.BuZbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZbwd(i,1) += spAIC.AvZbwd[jj](ii,k) * sInterp(k,0) + spAIC.BvZbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZbwd(i,2) += spAIC.AwZbwd[jj](ii,k) * sInterp(k,0) + spAIC.BwZbwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZfwd(i,0) += spAIC.AuZfwd[jj](ii,k) * sInterp(k,0) + spAIC.BuZfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZfwd(i,1) += spAIC.AvZfwd[jj](ii,k) * sInterp(k,0) + spAIC.BvZfwd[jj](ii,k) * sInterp(k,1);
+                mgVar.UZfwd(i,2) += spAIC.AwZfwd[jj](ii,k) * sInterp(k,0) + spAIC.BwZfwd[jj](ii,k) * sInterp(k,1);
             }
         }
     }
-
 
     // Freestream component
     for (int i = 0; i < fPan.nE; ++i) {

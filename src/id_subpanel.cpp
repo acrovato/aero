@@ -17,7 +17,6 @@
 #include "id_subpanel.h"
 
 #define NDIM 3
-#define NS 16
 #define C0 0.02
 #define C1 0.75
 
@@ -88,7 +87,7 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
     //// Initialization of AIC matrices to 0
     for(int i = 0; i < sp.sI.size(); i++) {
         size = sp.fI[i].size();
-        mTemp = MatrixXd::Zero(size, NS);
+        mTemp = MatrixXd::Zero(size, sp.NS);
         // Field
         spAIC.Au.push_back(mTemp);
         spAIC.Av.push_back(mTemp);
