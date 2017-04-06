@@ -62,6 +62,8 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
     mgVar.UZfwd.col(1) = mgAIC.BvZfwd * bPan.tau + mgAIC.AvZfwd * bPan.mu + mgAIC.CvZfwd * fPan.sigma;
     mgVar.UZfwd.col(2) = mgAIC.BwZfwd * bPan.tau + mgAIC.AwZfwd * bPan.mu + mgAIC.CwZfwd * fPan.sigma;
 
+    cout << endl;
+
     // Perturbation velocity (with sub-paneling technique)
     for (int jj = 0; jj < sp.sI.size(); jj++) {
     //for (int jj = 0; jj < 1; jj++) {
@@ -71,8 +73,9 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
         // Interpolation of singularities from centers to vertices
         vSing = interp_ctv(j, n, m, bPan);
         // Interpolation of singularities from vertices to sub-panel
-        sInterp = interp_sp(j, bPan, sp, vSing(0,0), vSing(1,0), vSing(2,0), vSing(3,0),
-                            vSing(0,1), vSing(0,1), vSing(2,1), vSing(3,1));
+        sInterp = interp_sp(j, bPan, sp,
+                            vSing(0,0), vSing(1,0), vSing(2,0), vSing(3,0),
+                            vSing(0,1), vSing(1,1), vSing(2,1), vSing(3,1));
 
         for (int ii = 0; ii < sp.fI[jj].size(); ii++) {
             int i = sp.fI[jj][ii]; // cell index
