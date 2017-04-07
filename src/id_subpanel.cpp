@@ -17,7 +17,7 @@
 #include "id_subpanel.h"
 
 #define NDIM 3
-#define C0 0.02
+#define C0 0.2
 #define C1 0.75
 
 using namespace std;
@@ -137,6 +137,7 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
     //// Control display
     cout << "Done!" << endl;
     cout << "Number of panels to split: " << sp.sI.size() << endl;
+    cout << "Number of sub-panels per panel: " << sp.NS << endl;
     //for(int i = 0; i < sp.sI.size(); i++) {
     //    cout << sp.sI[i] << ": ";
     //    for(int j = 0; j < sp.fI[i].size(); j++) {

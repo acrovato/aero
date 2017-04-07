@@ -360,7 +360,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 // Set flags
                 if (ii == 0)
                     FLAG = 1;
-                if (ii < sp.fI[jj].size())
+                if (ii < sp.fI[jj].size()-1)
                     ii++;
             }
             else {
@@ -510,7 +510,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BvZfwd(i,j) = coeffBF[4];
                 mgAIC.BwZfwd(i,j) = coeffBF[5];
             }
-            if (i == fPan.nF-1 && FLAG && jj < sp.sI.size())
+            if (i == fPan.nF-1 && FLAG && jj < sp.sI.size()-1)
                 jj++;
         }
     }

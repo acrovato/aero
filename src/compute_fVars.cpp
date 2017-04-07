@@ -62,8 +62,6 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
     mgVar.UZfwd.col(1) = mgAIC.BvZfwd * bPan.tau + mgAIC.AvZfwd * bPan.mu + mgAIC.CvZfwd * fPan.sigma;
     mgVar.UZfwd.col(2) = mgAIC.BwZfwd * bPan.tau + mgAIC.AwZfwd * bPan.mu + mgAIC.CwZfwd * fPan.sigma;
 
-    cout << endl;
-
     // Perturbation velocity (with sub-paneling technique)
     for (int jj = 0; jj < sp.sI.size(); jj++) {
     //for (int jj = 0; jj < 1; jj++) {
