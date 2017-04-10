@@ -49,6 +49,9 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     n(1) = (z2-z0)*(x1-x3) - (x2-x0)*(z1-z3);
     n(2) = (x2-x0)*(y1-y3) - (y2-y0)*(x1-x3);
     p = n.cross(l);
+    l = l / l.norm(); // normalize
+    p = p / p.norm(); // normalize
+    n = n / n.norm(); // normalize
     // Translation & Rotation
     A(0) = l(0)*(cg(0)-x0) + l(1)*(cg(1)-y0) + l(2)*(cg(2)-z0);
     A(1) = p(0)*(cg(0)-x0) + p(1)*(cg(1)-y0) + p(2)*(cg(2)-z0);

@@ -17,7 +17,7 @@
 #include "id_subpanel.h"
 
 #define NDIM 3
-#define C0 0.2
+#define C0 0.05
 #define C1 0.75
 
 using namespace std;
