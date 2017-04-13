@@ -13,11 +13,11 @@
 struct Network {
 
 	// Geometry 
-    int nC; // Number of chordwise points
-    int nS; // Number of spanwise points
-	int nC_; // Number of chordwise panel
-	int nS_; // Number of spanwise panel
-    int nP; // Number of panels
+    int nC = 0; // Number of chordwise points
+    int nS = 0; // Number of spanwise points
+	int nC_ = 0; // Number of chordwise panel
+	int nS_ = 0; // Number of spanwise panel
+    int nP = 0; // Number of panels
     Eigen::MatrixX3d CG; // Coordinates of panel CGs
     Eigen::MatrixX3d v0; // Coordinates of panel first vertex
     Eigen::MatrixX3d v1; // Coordinates of panel second vertex

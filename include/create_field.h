@@ -2,7 +2,8 @@
 #define FPMV1_CREATE_FIELD_H
 
 #include "Field.h"
+#include "Numerical_CST.h"
 
-void create_field(std::array<std::array<double, 3>, 8> &box, Field &fPan);
+void create_field(std::array<std::array<double, 3>, 8> &box, Numerical_CST &numC, Field &fPan);
 
 #endif //FPMV1_CREATE_FIELD_H

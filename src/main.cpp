@@ -46,22 +46,24 @@ using namespace Eigen;
 
 int main() {
 
-    // TODO Check all files for #define and add them (TOLG, TOLS, NS,...) to input .cgf file
-
     //// Variable definition
 	// Geometry
     bool symY = 0;
     double sRef = 1;
+    // Constants
+    Numerical_CST numC = {};
 	// Freestream
     double Minf = 0;
     double alpha = 0;
     Vector3d vInf(1.0, 0.0, 0.0);
 	// Surface and wake panels
     // TODO: if several Networks are considered, use std::vector <network>
-	Network bPan;
-	Network wPan;
+	Network bPan = {};
+	Network wPan = {};
 	// Field cells
-	Field fPan;
+	Field fPan = {};
+    // Sub-panels
+    Subpanel sp = {};
 	// Forces
     double cL = 0, cD = 0;
 
@@ -86,13 +88,13 @@ int main() {
     clock_t startS = clock();
 
     // Pre-processing
-    pre(symY, sRef, Minf, alpha, vInf, bPan, wPan, fPan);
+    pre(numC, symY, sRef, Minf, alpha, vInf, bPan, wPan, fPan, sp);
     clock_t endS = clock();
     cout << "Preprocessing time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
 
     // Solver
     startS = clock();
-    solver(symY, sRef, alpha, vInf, Minf, bPan, wPan, fPan, cL, cD);
+    solver(numC, symY, sRef, alpha, vInf, Minf, bPan, wPan, fPan, sp, cL, cD);
     endS = clock();
     cout << "Solver time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
 

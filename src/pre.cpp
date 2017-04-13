@@ -30,8 +30,8 @@
 using namespace std;
 using namespace Eigen;
 
-int pre(bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
-        Network &bPan, Network &wPan, Field &fPan) {
+int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
+        Network &bPan, Network &wPan, Field &fPan, Subpanel &sp) {
 
     //// Initialization
     // Temporary arrays to store grid information
@@ -64,7 +64,7 @@ int pre(bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
     //surfGridPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPM/IO/M6.pts";
 
     // Read config and grid from files
-    read_config(configParamPath, symY, sRef, machInf, AoA, box, fPan);
+    read_config(configParamPath, numC, symY, sRef, machInf, AoA, box, fPan, sp);
     read_sgrid(surfGridPath, sGrid, bPan);
 
     // Set freestream velocity and speed of sound
@@ -77,8 +77,8 @@ int pre(bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
     create_wake(sGrid, bPan, wPan);
 
     // Create volume grid and cells mapping
-    create_field(box, fPan);
-    map_field(sGrid, bPan, fPan);
+    create_field(box, numC, fPan);
+    map_field(sGrid, numC, bPan, fPan);
 
     //// End preprocessing
     cout << "****************************" << endl;

@@ -8,7 +8,6 @@
 // - fPan: field panels (structure)
 // - mgVar: field variabes for minigrid (structure)
 // - sp: subpanels indices (structure)
-// - dRho : derivative of density
 // - b2fAIC: body to field AIC (structure)
 // - f2fAIC: field to field AIC (structure)
 // - mgAIC: body to field AIC for minigrid (structure)
@@ -26,7 +25,7 @@
 using namespace std;
 using namespace Eigen;
 
-void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, Subpanel &sp, MatrixX3d &dRho,
+void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigrid &mgVar, Subpanel &sp,
                        Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Minigrid_AIC &mgAIC, Subpanel_AIC &spAIC) {
 
     //// Initialization
@@ -117,36 +116,32 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Mini
         mgVar.UZfwd.row(fPan.eIdx(i)) += vInf.transpose();
     }
 
-    // TODO: check if useful
     // Wake treatment
-    for (int i = 0; i < fPan.nE; ++i) {
-        idx = fPan.eIdx(i);
-        if (fPan.wMap(idx)) {
-            fPan.U(idx, 0) = 0.5 * (fPan.U(idx - fPan.nX, 0) + fPan.U(idx + fPan.nX, 0));
-            mgVar.UXbwd(idx, 0) = 0.5 * (mgVar.UXbwd(idx - fPan.nX, 0) + mgVar.UXbwd(idx + fPan.nX, 0));
-            mgVar.UXfwd(idx, 0) = 0.5 * (mgVar.UXfwd(idx - fPan.nX, 0) + mgVar.UXfwd(idx + fPan.nX, 0));
-            mgVar.UYbwd(idx, 0) = 0.5 * (mgVar.UYbwd(idx - fPan.nX, 0) + mgVar.UYbwd(idx + fPan.nX, 0));
-            mgVar.UYfwd(idx, 0) = 0.5 * (mgVar.UYfwd(idx - fPan.nX, 0) + mgVar.UYfwd(idx + fPan.nX, 0));
-            mgVar.UZbwd(idx, 0) = 0.5 * (mgVar.UZbwd(idx - fPan.nX, 0) + mgVar.UZbwd(idx + fPan.nX, 0));
-            mgVar.UZfwd(idx, 0) = 0.5 * (mgVar.UZfwd(idx - fPan.nX, 0) + mgVar.UZfwd(idx + fPan.nX, 0));
+    for (int i = 0; i < fPan.nW; ++i) {
+        idx = fPan.wIdx(i);
+        fPan.U(idx, 0) = 0.5 * (fPan.U(idx - fPan.nX, 0) + fPan.U(idx + fPan.nX, 0));
+        mgVar.UXbwd(idx, 0) = 0.5 * (mgVar.UXbwd(idx - fPan.nX, 0) + mgVar.UXbwd(idx + fPan.nX, 0));
+        mgVar.UXfwd(idx, 0) = 0.5 * (mgVar.UXfwd(idx - fPan.nX, 0) + mgVar.UXfwd(idx + fPan.nX, 0));
+        mgVar.UYbwd(idx, 0) = 0.5 * (mgVar.UYbwd(idx - fPan.nX, 0) + mgVar.UYbwd(idx + fPan.nX, 0));
+        mgVar.UYfwd(idx, 0) = 0.5 * (mgVar.UYfwd(idx - fPan.nX, 0) + mgVar.UYfwd(idx + fPan.nX, 0));
+        mgVar.UZbwd(idx, 0) = 0.5 * (mgVar.UZbwd(idx - fPan.nX, 0) + mgVar.UZbwd(idx + fPan.nX, 0));
+        mgVar.UZfwd(idx, 0) = 0.5 * (mgVar.UZfwd(idx - fPan.nX, 0) + mgVar.UZfwd(idx + fPan.nX, 0));
 
-            fPan.U(idx, 1) = 0.5 * (fPan.U(idx - fPan.nX, 1) + fPan.U(idx + fPan.nX, 1));
-            mgVar.UXbwd(idx, 1) = 0.5 * (mgVar.UXbwd(idx - fPan.nX, 1) + mgVar.UXbwd(idx + fPan.nX, 1));
-            mgVar.UXfwd(idx, 1) = 0.5 * (mgVar.UXfwd(idx - fPan.nX, 1) + mgVar.UXfwd(idx + fPan.nX, 1));
-            mgVar.UYbwd(idx, 1) = 0.5 * (mgVar.UYbwd(idx - fPan.nX, 1) + mgVar.UYbwd(idx + fPan.nX, 1));
-            mgVar.UYfwd(idx, 1) = 0.5 * (mgVar.UYfwd(idx - fPan.nX, 1) + mgVar.UYfwd(idx + fPan.nX, 1));
-            mgVar.UZbwd(idx, 1) = 0.5 * (mgVar.UZbwd(idx - fPan.nX, 1) + mgVar.UZbwd(idx + fPan.nX, 1));
-            mgVar.UZfwd(idx, 1) = 0.5 * (mgVar.UZfwd(idx - fPan.nX, 1) + mgVar.UZfwd(idx + fPan.nX, 1));
+        fPan.U(idx, 1) = 0.5 * (fPan.U(idx - fPan.nX, 1) + fPan.U(idx + fPan.nX, 1));
+        mgVar.UXbwd(idx, 1) = 0.5 * (mgVar.UXbwd(idx - fPan.nX, 1) + mgVar.UXbwd(idx + fPan.nX, 1));
+        mgVar.UXfwd(idx, 1) = 0.5 * (mgVar.UXfwd(idx - fPan.nX, 1) + mgVar.UXfwd(idx + fPan.nX, 1));
+        mgVar.UYbwd(idx, 1) = 0.5 * (mgVar.UYbwd(idx - fPan.nX, 1) + mgVar.UYbwd(idx + fPan.nX, 1));
+        mgVar.UYfwd(idx, 1) = 0.5 * (mgVar.UYfwd(idx - fPan.nX, 1) + mgVar.UYfwd(idx + fPan.nX, 1));
+        mgVar.UZbwd(idx, 1) = 0.5 * (mgVar.UZbwd(idx - fPan.nX, 1) + mgVar.UZbwd(idx + fPan.nX, 1));
+        mgVar.UZfwd(idx, 1) = 0.5 * (mgVar.UZfwd(idx - fPan.nX, 1) + mgVar.UZfwd(idx + fPan.nX, 1));
 
-            fPan.U(idx, 2) = 0;
-            mgVar.UXbwd(idx, 2) = 0;
-            mgVar.UXfwd(idx, 2) = 0;
-            mgVar.UYbwd(idx, 2) = 0;
-            mgVar.UYfwd(idx, 2) = 0;
-            mgVar.UZbwd(idx, 2) = 0;
-            mgVar.UZfwd(idx, 2) = 0;
-        } else
-            continue;
+        fPan.U(idx, 2) = 0;
+        mgVar.UXbwd(idx, 2) = 0;
+        mgVar.UXfwd(idx, 2) = 0;
+        mgVar.UYbwd(idx, 2) = 0;
+        mgVar.UYfwd(idx, 2) = 0;
+        mgVar.UZbwd(idx, 2) = 0;
+        mgVar.UZfwd(idx, 2) = 0;
     }
 
     //// Thermodynamic variables

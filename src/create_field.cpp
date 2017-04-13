@@ -12,12 +12,11 @@
 #include "create_field.h"
 
 #define NDIM 3
-#define SIZE_MG 1e-3
 
 using namespace std;
 using namespace Eigen;
 
-void create_field(array<array<double, 3>, 8> &box, Field &fPan) {
+void create_field(array<array<double, 3>, 8> &box, Numerical_CST &numC, Field &fPan) {
 
     // Temporary variables
     VectorXd X(fPan.nX,1), Y(fPan.nY,1), Z(fPan.nZ,1);
@@ -53,7 +52,7 @@ void create_field(array<array<double, 3>, 8> &box, Field &fPan) {
         Z0(k) = box[0][2] + k * fPan.deltaZ;
         Z1(k) = box[0][2] + (k + 1) * fPan.deltaZ;
     }
-    fPan.deltaMG = min({fPan.deltaX, fPan.deltaY, fPan.deltaZ}) * SIZE_MG;
+    fPan.deltaMG = min({fPan.deltaX, fPan.deltaY, fPan.deltaZ}) * numC.SIZEMG;
 
     // Center points & corner points
     for (int j = 0; j < fPan.nY; ++j) {

@@ -67,9 +67,8 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     avg = sqrt((x2-x0)*(x2-x0) + (y2-y0)*(y2-y0) + (z2-z0)*(z2-z0));
     zd = n(0)*(cg(0)-x) + n(1)*(cg(1)-y) + n(2)*(cg(2)-z);
     if (abs(zd/avg) > TOL) {
-        cout << endl << "Interpolated point to far from interpolation plane!" << endl;
+        cout << endl << "Interpolated point is far from interpolation plane; bilinear interpolation might be inaccurate!" << endl;
         cout << "Distance versus interpolation plane diagonal: " << zd << " / " << avg << endl;
-        exit(EXIT_FAILURE);
     }
 
     //// Interpolation

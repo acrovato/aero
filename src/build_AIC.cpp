@@ -28,6 +28,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                Body_AIC &b2bAIC, Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Field_AIC &f2bAIC, Minigrid_AIC &mgAIC,
                Subpanel &sp, Subpanel_AIC &spAIC) {
 
+    //// Initialization
     // Temporay variables
     int ii = 0, jj = 0; // counter
     bool FLAG = 0; // flag
@@ -38,13 +39,9 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     array<double, 2> coeffBB; // body to body influence container
     array<double, 6> coeffBF; // body to field influence container
 
-    array<RowVectorXd, 6> coeffSP; // body to field influence container for subpanel
-    coeffSP[0].resize(sp.NS);
-    coeffSP[1].resize(sp.NS);
-    coeffSP[2].resize(sp.NS);
-    coeffSP[3].resize(sp.NS);
-    coeffSP[4].resize(sp.NS);
-    coeffSP[5].resize(sp.NS);
+    array<RowVectorXd, 42> coeffSP; // body to field influence container for subpanel
+    for (int i = 0; i < 42; i++)
+        coeffSP[i].resize(sp.NS);
 
     array<double,2> xC, yC, zC; // cell vertices
     double x, y, z; // cell center
@@ -162,19 +159,13 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
         for (int i = 0; i < fPan.nF; ++i) {
             // Split panel and store AIC
             if (sp.sI.size() != 0 && j == sp.sI[jj] && i == sp.fI[jj][ii]) {
-                /// Center
-                dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc = glob2loc * trsfColloc;
 
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
+                coeffSP = split_panel(j, i, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
+                                      bPan, fPan, sp);
+                //for (int iiii = 0; iiii < 42; iiii++)
+                //    cout << coeffSP[iiii] << endl;
+                /// Center
                 spAIC.Au[jj].row(ii) = coeffSP[0];
                 spAIC.Av[jj].row(ii) = coeffSP[1];
                 spAIC.Aw[jj].row(ii) = coeffSP[2];
@@ -190,25 +181,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 b2fAIC.Bw(i,j) = 0;
 
                 /// X-fwd (minigrid)
-                dist(0) = fPan.CG(i,0)-fPan.deltaMG - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(0) -= fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuXbwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvXbwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwXbwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuXbwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvXbwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwXbwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuXbwd[jj].row(ii) = coeffSP[6];
+                spAIC.AvXbwd[jj].row(ii) = coeffSP[7];
+                spAIC.AwXbwd[jj].row(ii) = coeffSP[8];
+                spAIC.BuXbwd[jj].row(ii) = coeffSP[9];
+                spAIC.BvXbwd[jj].row(ii) = coeffSP[10];
+                spAIC.BwXbwd[jj].row(ii) = coeffSP[11];
                 // Set global AIC to 0
                 mgAIC.AuXbwd(i,j) = 0;
                 mgAIC.AvXbwd(i,j) = 0;
@@ -218,25 +196,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BwXbwd(i,j) = 0;
 
                 /// X-fwd (minigrid)
-                dist(0) = fPan.CG(i,0)+fPan.deltaMG - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(0) += fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuXfwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvXfwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwXfwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuXfwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvXfwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwXfwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuXfwd[jj].row(ii) = coeffSP[12];
+                spAIC.AvXfwd[jj].row(ii) = coeffSP[13];
+                spAIC.AwXfwd[jj].row(ii) = coeffSP[14];
+                spAIC.BuXfwd[jj].row(ii) = coeffSP[15];
+                spAIC.BvXfwd[jj].row(ii) = coeffSP[16];
+                spAIC.BwXfwd[jj].row(ii) = coeffSP[17];
                 // Set global AIC to 0
                 mgAIC.AuXfwd(i,j) = 0;
                 mgAIC.AvXfwd(i,j) = 0;
@@ -246,25 +211,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BwXfwd(i,j) = 0;
 
                 /// Y-bwd (minigrid)
-                dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1)-fPan.deltaMG - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(1) -= fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuYbwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvYbwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwYbwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuYbwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvYbwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwYbwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuYbwd[jj].row(ii) = coeffSP[18];
+                spAIC.AvYbwd[jj].row(ii) = coeffSP[19];
+                spAIC.AwYbwd[jj].row(ii) = coeffSP[20];
+                spAIC.BuYbwd[jj].row(ii) = coeffSP[21];
+                spAIC.BvYbwd[jj].row(ii) = coeffSP[22];
+                spAIC.BwYbwd[jj].row(ii) = coeffSP[23];
                 // Set global AIC to 0
                 mgAIC.AuYbwd(i,j) = 0;
                 mgAIC.AvYbwd(i,j) = 0;
@@ -274,25 +226,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BwYbwd(i,j) = 0;
 
                 /// Y-fwd (minigrid)
-                dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1)+fPan.deltaMG - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(1) += fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuYfwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvYfwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwYfwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuYfwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvYfwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwYfwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuYfwd[jj].row(ii) = coeffSP[24];
+                spAIC.AvYfwd[jj].row(ii) = coeffSP[25];
+                spAIC.AwYfwd[jj].row(ii) = coeffSP[26];
+                spAIC.BuYfwd[jj].row(ii) = coeffSP[27];
+                spAIC.BvYfwd[jj].row(ii) = coeffSP[28];
+                spAIC.BwYfwd[jj].row(ii) = coeffSP[29];
                 // Set global AIC to 0
                 mgAIC.AuYfwd(i,j) = 0;
                 mgAIC.AvYfwd(i,j) = 0;
@@ -302,25 +241,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BwYfwd(i,j) = 0;
 
                 /// Z-bwd (minigrid)
-                dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2)-fPan.deltaMG - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(2) -= fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuZbwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvZbwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwZbwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuZbwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvZbwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwZbwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuZbwd[jj].row(ii) = coeffSP[30];
+                spAIC.AvZbwd[jj].row(ii) = coeffSP[31];
+                spAIC.AwZbwd[jj].row(ii) = coeffSP[32];
+                spAIC.BuZbwd[jj].row(ii) = coeffSP[33];
+                spAIC.BvZbwd[jj].row(ii) = coeffSP[34];
+                spAIC.BwZbwd[jj].row(ii) = coeffSP[35];
                 // Set global AIC to 0
                 mgAIC.AuZbwd(i,j) = 0;
                 mgAIC.AvZbwd(i,j) = 0;
@@ -330,25 +256,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 mgAIC.BwZbwd(i,j) = 0;
 
                 /// Z-fwd (minigrid)
-                dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
-                dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
-                dist(2) = fPan.CG(i,2)+fPan.deltaMG - bPan.CG(j,2);
-                dist = glob2loc * dist;
-                trsfColloc = fPan.CG.row(i).transpose();
-                trsfColloc(2) += fPan.deltaMG;
-                trsfColloc = glob2loc * trsfColloc;
-
-                coeffSP = split_panel(sp.NS, sp.NSs, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                      trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                      trsfColloc(0), trsfColloc(1), dist(2),
-                                      bPan.l(j,0), bPan.l(j,1), bPan.l(j,2), bPan.p(j,0), bPan.p(j,1), bPan.p(j,2),
-                                      bPan.n(j,0), bPan.n(j,1), bPan.n(j,2));
-                spAIC.AuZfwd[jj].row(ii) = coeffSP[0];
-                spAIC.AvZfwd[jj].row(ii) = coeffSP[1];
-                spAIC.AwZfwd[jj].row(ii) = coeffSP[2];
-                spAIC.BuZfwd[jj].row(ii) = coeffSP[3];
-                spAIC.BvZfwd[jj].row(ii) = coeffSP[4];
-                spAIC.BwZfwd[jj].row(ii) = coeffSP[5];
+                spAIC.AuZfwd[jj].row(ii) = coeffSP[36];
+                spAIC.AvZfwd[jj].row(ii) = coeffSP[37];
+                spAIC.AwZfwd[jj].row(ii) = coeffSP[38];
+                spAIC.BuZfwd[jj].row(ii) = coeffSP[39];
+                spAIC.BvZfwd[jj].row(ii) = coeffSP[40];
+                spAIC.BwZfwd[jj].row(ii) = coeffSP[41];
                 // Set global AIC to 0
                 mgAIC.AuZfwd(i,j) = 0;
                 mgAIC.AvZfwd(i,j) = 0;

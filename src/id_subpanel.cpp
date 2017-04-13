@@ -17,8 +17,6 @@
 #include "id_subpanel.h"
 
 #define NDIM 3
-#define C0 0.05
-#define C1 0.75
 
 using namespace std;
 using namespace Eigen;
@@ -51,8 +49,8 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
             int l = k % 4 + 1;
             eL(k-1) = (pV.row(l-1)-pV.row(k-1)).norm();
         }
-        dC = C0 * eL;
-        hC = C1 * eL;
+        dC = sp.NC * eL;
+        hC = sp.LC * eL;
         // Loop reset
         FLAG = 0;
         vTemp = {};

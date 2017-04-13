@@ -21,7 +21,7 @@
 using namespace std;
 using namespace Eigen;
 
-void write_sp(string outPath, double sRef, double alpha, double Minf, Network bPan, double cL, double cD) {
+void write_sp(string outPath, double sRef, double alpha, double Minf, Network &bPan, double cL, double cD) {
 
     //// Begin
     cout << "Writing surface pressure file in 'sp.dat'... ";

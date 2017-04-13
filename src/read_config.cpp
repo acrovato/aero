@@ -21,14 +21,15 @@
 
 using namespace std;
 
-void read_config(string path, bool &symY, double &sRef, double &machInf, double &AoA, array<array<double, 3>, 8> &box,
-                 Field &fPan) {
+void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &AoA, array<array<double, 3>, 8> &box,
+                 Field &fPan, Subpanel &sp) {
 
     ifstream infile(path);
     string line;
 
     string name;
     bool symValue;
+    double numValue;
     double geoValue;
     double flowValue;
     int gridValue;
@@ -78,6 +79,28 @@ void read_config(string path, bool &symY, double &sRef, double &machInf, double 
 
             }
 
+            else if (section == "$num") {
+                stringstream ss(line);
+                ss >> name >> symbol >> numValue >> comment_symbol >> comment;
+
+                if (name == "MGsize") {
+                    numC.SIZEMG = numValue;
+                }
+                else if (name == "boxTol") {
+                    numC.TOLB = numValue;
+                }
+                else if (name == "singTol") {
+                    numC.TOLS = numValue;
+                }
+                else if (name == "resRed") {
+                    numC.RRED = numValue;
+                    secFLAG = 1;
+                }
+                else {
+                    cout << "Invalid parameter name: " << name << " at line " << i << endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
 
             else if (section == "$geo") {
                 stringstream ss(line);
@@ -168,6 +191,27 @@ void read_config(string path, bool &symY, double &sRef, double &machInf, double 
 
                 else if (name == "BOX_X1Y1Z1") {
                     box[7][0] = ptsValue1; box[7][1] = ptsValue2; box[7][2] = ptsValue3;
+                    secFLAG = 1;
+                }
+                else {
+                    cout << "Invalid parameter name: " << name << " at line " << i << endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            else if (section == "$sub") {
+                stringstream ss(line);
+                ss >> name >> symbol >> numValue >> comment_symbol >> comment;
+
+                if (name == "NS") {
+                    sp.NSs = (int) numValue;
+                    sp.NS = sp.NSs * sp.NSs;
+                }
+                else if (name == "NC") {
+                    sp.NC = numValue;
+                }
+                else if (name == "LC") {
+                    sp.LC = numValue;
                     break;
                 }
                 else {
@@ -186,6 +230,10 @@ void read_config(string path, bool &symY, double &sRef, double &machInf, double 
 
     cout << "Done reading config file!" << endl;
     cout << "XZ symmetry: " << symY << endl;
+    cout << "Minigrid size: " << numC.SIZEMG << endl;
+    cout << "Tolerance on box: " << numC.TOLB << endl;
+    cout << "Tolerance on singularity: " << numC.TOLS << endl;
+    cout << "Order of magnitude of residual reduction: " << numC.RRED << endl;
     cout << "Reference surface: " << sRef << endl;
     cout << "Mach number: " << machInf << endl;
     cout << "Angle of attack: " << AoA*180/PI << endl;

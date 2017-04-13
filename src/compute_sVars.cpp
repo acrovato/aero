@@ -27,7 +27,7 @@ void compute_sVars(bool symY, double sRef, double alpha, double machInf, Vector3
 
     // Resize matrices
     bPan.U = MatrixX3d::Zero(bPan.nP, NDIM);
-    bPan.cP.resize(bPan.nP, 1);
+    bPan.cP.resize(bPan.nP);
 
     //// Velocity computation
     // Surface induced velocity
@@ -90,9 +90,10 @@ void compute_sVars(bool symY, double sRef, double alpha, double machInf, Vector3
     if (machInf != 0)
         bPan.U += vSigma;
     // Mach number
-    if (machInf != 0)
+    if (machInf == 0)
         bPan.M = VectorXd::Zero(bPan.nP);
     else {
+        bPan.M.resize(bPan.nP);
         for (int i = 0; i < bPan.nP; ++i)
             bPan.M(i) = bPan.U.row(i).norm()
                         / (1 / (machInf * machInf)
