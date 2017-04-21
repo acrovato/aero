@@ -33,9 +33,11 @@ void solve_body(Vector3d &vInf, VectorXd &RHS, MatrixX3d &vSigma, Network &bPan,
     // Compute RHS
     RHS = - b2bAIC.B * bPan.tau;
     // Solve: A*mu + B*sigma = 0 (Dirichlet: interior potential = 0)
-
-    //panDoublet = muAIC.fullPivLu().solve(RHS);
-    bPan.mu = b2bAIC.A.householderQr().solve(RHS);
+    #ifdef ON_UNIX
+        bPan.mu = b2bAIC.A.householderQr().solve(RHS);
+    #else
+        panDoublet = muAIC.fullPivLu().solve(RHS);
+    #endif
 
     //// Control display
     cout << "Done!" << endl;

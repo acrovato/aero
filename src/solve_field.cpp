@@ -36,23 +36,30 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Minigr
     compute_fVars(Minf, vInf, bPan, fPan, mgVar, sp, b2fAIC, f2fAIC, mgAIC, spAIC);
 
     //// Field sources
-    // X-derivative of density
+    // Derivative of density
     for (int i = 0; i < fPan.nE; ++i) {
         idx = fPan.eIdx(i);
         // Subsonic point, central differencing
-        fPan.dRho(idx, 0) = 0.5 * (mgVar.rhoXfwd(idx) - mgVar.rhoXbwd(idx)) / fPan.deltaMG;
-    }
-    // Y-derivative of density
-    for (int i = 0; i < fPan.nE; ++i) {
-        idx = fPan.eIdx(i);
-        // Subsonic point, central differencing
-        fPan.dRho(idx, 1) = 0.5 * (mgVar.rhoYfwd(idx) - mgVar.rhoYbwd(idx)) / fPan.deltaMG;
-    }
-    // Z-derivative of density
-    for (int i = 0; i < fPan.nE; ++i) {
-        idx = fPan.eIdx(i);
-        // Subsonic point, central differencing
-        fPan.dRho(idx, 2) = 0.5 * (mgVar.rhoZfwd(idx) - mgVar.rhoZbwd(idx)) / fPan.deltaMG;
+        //if (fPan.M(idx) < M_C) {
+            fPan.dRho(idx, 0) = 0.5 * (mgVar.rhoXfwd(idx) - mgVar.rhoXbwd(idx)) / fPan.deltaMG;
+            fPan.dRho(idx, 1) = 0.5 * (mgVar.rhoYfwd(idx) - mgVar.rhoYbwd(idx)) / fPan.deltaMG;
+            fPan.dRho(idx, 2) = 0.5 * (mgVar.rhoZfwd(idx) - mgVar.rhoZbwd(idx)) / fPan.deltaMG;
+        //}
+        // Supersonic point, upwind differencing
+        //else {
+        //    if (fPan.U(idx, 0) > 0)
+        //        fPan.dRho(idx, 0) = (fPan.rho(idx) - mgVar.rhoXbwd(idx)) / fPan.deltaMG;
+        //    else
+        //        fPan.dRho(idx, 0) = (mgVar.rhoXfwd(idx) - fPan.rho(idx)) / fPan.deltaMG;
+        //    if (fPan.U(idx, 1) > 0)
+        //        fPan.dRho(idx, 1) = (fPan.rho(idx) - mgVar.rhoYbwd(idx)) / fPan.deltaMG;
+        //    else
+        //        fPan.dRho(idx, 1) = (mgVar.rhoYfwd(idx) - fPan.rho(idx)) / fPan.deltaMG;
+        //    if (fPan.U(idx, 2) > 0)
+        //        fPan.dRho(idx, 2) = (fPan.rho(idx) - mgVar.rhoZbwd(idx)) / fPan.deltaMG;
+        //    else
+        //        fPan.dRho(idx, 2) = (mgVar.rhoZfwd(idx) - fPan.rho(idx)) / fPan.deltaMG;
+        //}
     }
 
     // Field sources

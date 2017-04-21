@@ -39,8 +39,11 @@ int post(double sRef, double alpha, double Minf, Network &bPan, Field &fPan, dou
     // Paths
     string outPath;
     outPath = "../IO/";
-    outPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/";
-    //outPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPM/IO/";
+    #ifdef ON_UNIX
+        outPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/";
+    #else
+        outPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPM/IO/";
+    #endif
 
     //// Write to file
     write_sp(outPath, sRef, alpha, Minf, bPan, cL, cD);

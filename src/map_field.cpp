@@ -64,7 +64,7 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
                 for (int s = 0; s < bPan.nS_; ++s) {
                     idx0 = s * bPan.nC;
                     idx1 = (s + 1) * bPan.nC;
-                    if (fPan.CG(f, 1) < sGrid(idx1, 1)) {
+                    if (fPan.CG(f, 1) <= sGrid(idx1, 1)) {
                         a = (sGrid(idx1, 0) - sGrid(idx0, 0)) / (sGrid(idx1, 1) - sGrid(idx0, 1));
                         b = sGrid(idx0, 0) - a * sGrid(idx0, 1);
                         xL = a * fPan.CG(f, 1) + b;

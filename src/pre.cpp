@@ -55,13 +55,19 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     cout << "Enter input parameters file name:" << endl;
     cin >> configParamName;
     configParamPath = "../IO/" + configParamName + ".cfg";
-    configParamPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.cfg";
-    //configParamPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPM/IO/M6.cfg";
+    #ifdef ON_UNIX
+        configParamPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.cfg";
+    #else
+        configParamPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.cfg";
+    #endif
     cout << "Enter input surface grid file name:" << endl;
     cin >> surfGridName;
     surfGridPath = "../IO/" +surfGridName + ".pts";
-    surfGridPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.pts";
-    //surfGridPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPM/IO/M6.pts";
+    #ifdef ON_UNIX
+        surfGridPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.pts";
+    #else
+        surfGridPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.pts";
+    #endif
 
     // Read config and grid from files
     read_config(configParamPath, numC, symY, sRef, machInf, AoA, box, fPan, sp);
