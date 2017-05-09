@@ -60,7 +60,7 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
             c(3,2) = idG + 1 + bPan.nC_;
             c(3,3) = idG + bPan.nC_;
         }
-        else if (idC == bPan.nC_) {
+        else if (idC == bPan.nC_ - 1) {
             c(0,0) = idG - 1;
             c(0,1) = idG;
             c(0,2) = idG + bPan.nC_;
@@ -97,7 +97,7 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
             c(3,3) = idG - 1 + bPan.nC_;
         }
     }
-    else if (idS == bPan.nS_) {
+    else if (idS == bPan.nS_ - 1) {
         if (idC == 0) {
             c(0,0) = idG - bPan.nC_;
             c(0,1) = idG - bPan.nC_ + 1;
@@ -116,7 +116,7 @@ MatrixXd interp_ctv(int idG, int idC, int idS, Network &bPan) {
             c(3,2) = idG + 1;
             c(3,3) = idG;
         }
-        else if (idC == bPan.nC_) {
+        else if (idC == bPan.nC_ - 1) {
             c(0,0) = idG - 1 - bPan.nC_;
             c(0,1) = idG - bPan.nC_;
             c(0,2) = idG;

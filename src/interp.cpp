@@ -15,7 +15,7 @@
 #include <Eigen/Dense>
 #include "interp.h"
 
-#define TOL 1e-3 // geometric tolerance on z (measure how far target point is w.r.t. interpolation plane)
+#define TOL 1e-2 // geometric tolerance on z (measure how far target point is w.r.t. interpolation plane)
 
 using namespace std;
 using namespace Eigen;
@@ -65,10 +65,11 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     X(1) = p(0)*(cg(0)-x) + p(1)*(cg(1)-y) + p(2)*(cg(2)-z);
     // Error measure
     avg = sqrt((x2-x0)*(x2-x0) + (y2-y0)*(y2-y0) + (z2-z0)*(z2-z0));
-    zd = n(0)*(cg(0)-x) + n(1)*(cg(1)-y) + n(2)*(cg(2)-z);
+    zd = n(0)*(x-cg(0)) + n(1)*(y-cg(1)) + n(2)*(z-cg(2));
     if (abs(zd/avg) > TOL) {
         cout << endl << "Interpolated point is far from interpolation plane; bilinear interpolation might be inaccurate!" << endl;
-        cout << "Distance versus interpolation plane diagonal: " << zd << " / " << avg << endl;
+        cout << "Distance versus interpolation plane diagonal: " << zd << " / " << avg << " > " << TOL << endl;
+        cout << "This might be caused by a coarse panelling of the body surface." << endl;
     }
 
     //// Interpolation
@@ -107,7 +108,7 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     i = (1-v)*i0 + v*i1;
     return i;
 
-    /// TDDO: OLD VERSION - REMOVE BEFORE FLIGHT
+    // TODO: OLD VERSION - REMOVE BEFORE FLIGHT
     /*
     // Initialization
     double u0, u1, t;
