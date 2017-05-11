@@ -58,6 +58,8 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     bPan.tau.resize(bPan.nP);
     bPan.mu.resize(bPan.nP);
     fPan.sigma = VectorXd::Zero(fPan.nF);
+    fPan.sigmaTilda = VectorXd::Zero(fPan.nF);
+    fPan.dSigma = MatrixX3d::Zero(fPan.nF, NDIM);
     // Flow variables // TODO check if initialization is useful
     fPan.M = VectorXd::Zero(fPan.nF);
     fPan.U = MatrixX3d::Zero(fPan.nF, NDIM);
@@ -89,6 +91,30 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     mgVar.UYfwd.resize(fPan.nF, NDIM);
     mgVar.UZbwd.resize(fPan.nF, NDIM);
     mgVar.UZfwd.resize(fPan.nF, NDIM);
+    mgVar.rhoXmidbwd.resize(fPan.nF);
+    mgVar.rhoXmidfwd.resize(fPan.nF);
+    mgVar.rhoYmidbwd.resize(fPan.nF);
+    mgVar.rhoYmidfwd.resize(fPan.nF);
+    mgVar.rhoZmidbwd.resize(fPan.nF);
+    mgVar.rhoZmidfwd.resize(fPan.nF);
+    mgVar.UXmidbwd.resize(fPan.nF, NDIM);
+    mgVar.UXmidfwd.resize(fPan.nF, NDIM);
+    mgVar.UYmidbwd.resize(fPan.nF, NDIM);
+    mgVar.UYmidfwd.resize(fPan.nF, NDIM);
+    mgVar.UZmidbwd.resize(fPan.nF, NDIM);
+    mgVar.UZmidfwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoXmidbwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoXmidfwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoYmidbwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoYmidfwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoZmidbwd.resize(fPan.nF, NDIM);
+    mgVar.dRhoZmidfwd.resize(fPan.nF, NDIM);
+    mgVar.sigmaXmidbwd.resize(fPan.nF);
+    mgVar.sigmaXmidfwd.resize(fPan.nF);
+    mgVar.sigmaYmidbwd.resize(fPan.nF);
+    mgVar.sigmaYmidfwd.resize(fPan.nF);
+    mgVar.sigmaZmidbwd.resize(fPan.nF);
+    mgVar.sigmaZmidfwd.resize(fPan.nF);
 
     //// Identify sub-panels
     id_subpanel(bPan, fPan, sp, spAIC);
@@ -127,7 +153,7 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             cout << "Rel. residual at iteration " << itCnt << ": " << log10(res.norm()/resInit) << endl;
             cout << "Max. residual at iteration " << itCnt << ": " << log10(res.maxCoeff()) << endl << endl;
             itCnt++;
-        } while(itCnt < 1);// (log10(res.norm()/resInit) > -numC.RRED);
+        } while(itCnt < 15);// (log10(res.norm()/resInit) > -numC.RRED);
         cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
         cout << ">>Process converged in " << itCnt << " iteration(s)!<<" << endl;
         cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;
