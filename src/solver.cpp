@@ -153,7 +153,8 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             cout << "Rel. residual at iteration " << itCnt << ": " << log10(res.norm()/resInit) << endl;
             cout << "Max. residual at iteration " << itCnt << ": " << log10(res.maxCoeff()) << endl << endl;
             itCnt++;
-        } while(itCnt < 15);// (log10(res.norm()/resInit) > -numC.RRED);
+        } while(itCnt < 15);//(log10(res.norm()/resInit) > -numC.RRED);
+        //TODO: Consider using true residual (div(U) - sigma -> 0)
         cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
         cout << ">>Process converged in " << itCnt << " iteration(s)!<<" << endl;
         cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;
