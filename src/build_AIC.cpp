@@ -1119,14 +1119,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             zC[1] = fPan.vZ(j,1) - fPan.CG(j,2);
 
             // Field to field
-            x = fPan.CG(j,0) - fPan.CG(j,0);
-            y = fPan.CG(j,1) + fPan.CG(j,1);
-            z = fPan.CG(j,2) - fPan.CG(j,2);
-            coeffF = infcF(x, y, z, xC, yC, zC);
-            f2fAIC.Cu(j,j) += coeffF[0];
-            f2fAIC.Cv(j,j) += coeffF[1];
-            f2fAIC.Cw(j,j) += coeffF[2];
-            for (int i = j+1; i < fPan.nF; ++i) {
+            for (int i = 0; i < fPan.nF; ++i) {
                 x = fPan.CG(i,0) - fPan.CG(j,0);
                 y = fPan.CG(i,1) + fPan.CG(j,1);
                 z = fPan.CG(i,2) - fPan.CG(j,2);
@@ -1134,9 +1127,6 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 f2fAIC.Cu(i,j) += coeffF[0];
                 f2fAIC.Cv(i,j) += coeffF[1];
                 f2fAIC.Cw(i,j) += coeffF[2];
-                f2fAIC.Cu(j,i) += -coeffF[0];
-                f2fAIC.Cv(j,i) += -coeffF[1];
-                f2fAIC.Cw(j,i) += -coeffF[2];
             }
 
             // Field to field for minigrid
@@ -1207,6 +1197,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             }
         }
     }
+
     //// Control display
     cout << "Done!" << endl << endl;
 }

@@ -66,12 +66,15 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     fPan.rho = VectorXd::Zero(fPan.nF);
     fPan.dRho = MatrixX3d::Zero(fPan.nF, NDIM);
     fPan.a = VectorXd::Zero(fPan.nF);
+    // Numerics
+    fPan.epsilon.resize(fPan.nF);
+
 
     // Temporary variables
     int itCnt = 0; // Global iteration counter
-    double resInit = 0; // Initial residual
-    VectorXd sigmaTmp, res; // To store sigma during iteration and residual
-    res.resize(fPan.nF);
+    double deltaSigma0 = 0; // Initial sigma change
+    VectorXd sigmaTmp, deltaSigma; // To store sigma and delta sigma during iteration
+    deltaSigma.resize(fPan.nF);
     sigmaTmp.resize(fPan.nF);
     VectorXd RHS; // Right hand side
     RHS.resize(bPan.nP);
@@ -139,21 +142,28 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             vSigma.col(0) = f2bAIC.Cu * fPan.sigma;
             vSigma.col(1) = f2bAIC.Cv * fPan.sigma;
             vSigma.col(2) = f2bAIC.Cw * fPan.sigma;
+            // Residual
+            for (int i = 0; i < fPan.nF; ++i) {
+                if (fPan.fMap(i) && !fPan.wMap(i))
+                    fPan.epsilon(i) = 0.5 * (mgVar.UXfwd(i,0)-mgVar.UXbwd(i,0) + mgVar.UYfwd(i,1)-mgVar.UYbwd(i,1) + mgVar.UZfwd(i,2)-mgVar.UZbwd(i,2)) / fPan.deltaMG - fPan.sigma(i);
+                else
+                    fPan.epsilon(i) = 0;
+            }
             // Stop criterion
             for (int i = 0; i < fPan.nF; ++i)
-                res(i) = abs(fPan.sigma(i) - sigmaTmp(i));
+                deltaSigma(i) = abs(fPan.sigma(i) - sigmaTmp(i));
             if (!itCnt)
-                resInit = res.norm();
-            if (isnan(res.norm())) {
+                deltaSigma0 = deltaSigma.norm();
+            if (isnan(deltaSigma.norm())) {
                 cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
                 cout << ">>Process diverged at iteration #" << itCnt + 1 << "!<<" << endl;
                 cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;
                 exit(EXIT_FAILURE);
             }
-            cout << "Rel. residual at iteration " << itCnt << ": " << log10(res.norm()/resInit) << endl;
-            cout << "Max. residual at iteration " << itCnt << ": " << log10(res.maxCoeff()) << endl << endl;
+            cout << "Relative source change at iteration " << itCnt << ": " << log10(deltaSigma.norm()/deltaSigma0) << endl;
+            cout << "FPE global residual at iteration " << itCnt << ": " << log10(fPan.epsilon.norm()) << endl << endl;
             itCnt++;
-        } while(itCnt < 15);//(log10(res.norm()/resInit) > -numC.RRED);
+        } while(log10(deltaSigma.norm()/deltaSigma0) > -numC.RRED);
         //TODO: Consider using true residual (div(U) - sigma -> 0)
         cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
         cout << ">>Process converged in " << itCnt << " iteration(s)!<<" << endl;

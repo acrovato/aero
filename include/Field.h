@@ -38,6 +38,9 @@ struct Field {
 	Eigen::VectorXd rho; // Density
 	Eigen::MatrixX3d dRho; // Density gradient
 	Eigen::VectorXd a; // Speed of sound
+
+    // Numerics
+    Eigen::VectorXd epsilon; // True residual of the FPE
 };
 
 #endif //FPMV1_FIELD_H

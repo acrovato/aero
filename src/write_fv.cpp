@@ -42,7 +42,8 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
     fv.width(15); fv << right << "U_y";
     fv.width(15); fv << right << "U_z";
     fv.width(15); fv << right << "Mach";
-    fv.width(15); fv << right << "Sigma" << endl;
+    fv.width(15); fv << right << "Sigma";
+    fv.width(15); fv << right << "Epsilon" << endl;
 
     // Write field quantities
     for (int i = 0; i < fPan.nF; ++i) {
@@ -53,7 +54,8 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
         fv.width(15); fv << right << fPan.U(i,1);
         fv.width(15); fv << right << fPan.U(i,2);
         fv.width(15); fv << right << fPan.M(i);
-        fv.width(15); fv << right << fPan.sigma(i) << endl;
+        fv.width(15); fv << right << fPan.sigma(i);
+        fv.width(15); fv << right << fPan.epsilon(i) << endl;
     }
 
     // Close file
