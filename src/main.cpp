@@ -22,7 +22,7 @@
 //// Acronym
 // - STREAM: Swift Transonic Enhanced Aerodynamic Modeling
 //		JET-STREAM, STEAM
-// - QtAero: Cute Aerodynamics
+// - QtAero: Quick Aerodynamics
 // - STAMPD: Swift Transonic Aerodynamic Modeling for Preliminary Design
 // - STAR(PAD): Swift Transonic Aerodynamics (for Preliminary Aircraft Design)
 // - SAMPAD: Swift Aerodynamic Modeling for Preliminary Aircraft Design

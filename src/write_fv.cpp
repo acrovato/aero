@@ -41,6 +41,9 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
     fv.width(15); fv << right << "U_x";
     fv.width(15); fv << right << "U_y";
     fv.width(15); fv << right << "U_z";
+    fv.width(15); fv << right << "rho";
+    fv.width(15); fv << right << "rho_X";
+    fv.width(15); fv << right << "rho_Z";
     fv.width(15); fv << right << "Mach";
     fv.width(15); fv << right << "Sigma";
     fv.width(15); fv << right << "Epsilon" << endl;
@@ -53,6 +56,9 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
         fv.width(15); fv << right << fPan.U(i,0);
         fv.width(15); fv << right << fPan.U(i,1);
         fv.width(15); fv << right << fPan.U(i,2);
+        fv.width(15); fv << right << fPan.rho(i);
+        fv.width(15); fv << right << fPan.dRho(i,0);
+        fv.width(15); fv << right << fPan.dRho(i,2);
         fv.width(15); fv << right << fPan.M(i);
         fv.width(15); fv << right << fPan.sigma(i);
         fv.width(15); fv << right << fPan.epsilon(i) << endl;

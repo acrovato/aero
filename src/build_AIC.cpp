@@ -163,8 +163,6 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 coeffSP = split_panel(j, i, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       bPan, fPan, sp);
-                //for (int iiii = 0; iiii < 42; iiii++)
-                //    cout << coeffSP[iiii] << endl;
                 /// Center
                 spAIC.Au[jj].row(ii) = coeffSP[0];
                 spAIC.Av[jj].row(ii) = coeffSP[1];
@@ -297,7 +295,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 b2fAIC.Bv(i,j) = coeffBF[4];
                 b2fAIC.Bw(i,j) = coeffBF[5];
 
-                /// X-bwd (minigrid)
+                // X-bwd (minigrid)
                 dist(0) = fPan.CG(i,0)-fPan.deltaMG - bPan.CG(j,0);
                 dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
                 dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
