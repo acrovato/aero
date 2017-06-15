@@ -31,8 +31,6 @@ struct Field {
 
 	// Flow
 	Eigen::VectorXd sigma; // Field panel source singularity
-	Eigen::MatrixX3d dSigma; // Field panel source singularity gradient
-	Eigen::VectorXd sigmaTilda; // Modified field panel source singularity
 	Eigen::MatrixX3d U; // Velocity components
 	Eigen::VectorXd M; // Mach number
 	Eigen::VectorXd rho; // Density

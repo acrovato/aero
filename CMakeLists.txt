@@ -9,7 +9,11 @@ ENDIF()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-include_directories(include)
+IF (UNIX)
+    include_directories(include)
+ELSEIF(WIN32)
+    include_directories(include; C:/eigen-3.3.3/Eigen/)
+ENDIF()
 set(SOURCE_FILES src/main.cpp
         src/pre.cpp
         src/read_config.cpp
