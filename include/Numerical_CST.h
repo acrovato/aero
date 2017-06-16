@@ -6,7 +6,6 @@
 
 struct Numerical_CST {
     // Pre-processing
-    double SIZEMG = 1e-3; // minigrid size
     double TOLB = 1e-3; // geometric tolerance on box (enclosing the geometry) size
     double TOLS = 1e-6; // geometric tolerance on distance between field singularity (field panel center) and surface
     // Solver

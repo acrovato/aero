@@ -46,9 +46,9 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
     //// Map cells
     for (int f = 0; f < fPan.nF; ++f) {
         fCtr = fPan.CG.row(f).transpose();
-        if (((fCtr(0) + fPan.deltaMG) >= minX && (fCtr(0) - fPan.deltaMG) <= maxX)
-            && ((fCtr(1) + fPan.deltaMG) >= minY && (fCtr(1) - fPan.deltaMG) <= maxY)
-            && ((fCtr(2) + fPan.deltaMG) >= minZ && (fCtr(2) - fPan.deltaMG) <= maxZ)) {
+        if (((fCtr(0)) >= minX && (fCtr(0)) <= maxX)
+            && ((fCtr(1)) >= minY && (fCtr(1)) <= maxY)
+            && ((fCtr(2)) >= minZ && (fCtr(2)) <= maxZ)) {
             for (int p = 0; p < bPan.nP; ++p) {
                 // tmp variables for compatibility
                 pt = bPan.CG.row(p).transpose();
@@ -73,10 +73,10 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
                         b = sGrid(idx0 + bPan.nC_/2, 0) - a * sGrid(idx0 + bPan.nC_/2, 1);
                         xL0 = a * fPan.CG(f, 1) + b;
                         // if cell is NOT fwd or aft local airfoil
-                        if (fPan.CG(f,0) + fPan.deltaMG > (xL0-numC.TOLS) && fPan.CG(f,0) - fPan.deltaMG < (xL+numC.TOLS)) {
+                        if (fPan.CG(f,0) > (xL0-numC.TOLS) && fPan.CG(f,0) < (xL+numC.TOLS)) {
                             dist.block(s * bPan.nC_, 0, bPan.nC_, 1).minCoeff(&idx);
                             // if normal distance between field point and closest panel is less than TOLS, interior point
-                            if (dotPrd(idx + s*bPan.nC_) - fPan.deltaMG < numC.TOLS) {
+                            if (dotPrd(idx + s*bPan.nC_) < numC.TOLS) {
                                 fPan.fMap(f) = 0;
                                 fPan.nI++;
                                 break;
@@ -143,7 +143,7 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
                     b = sGrid(idx0,2) - a*sGrid(idx0,1);
                     zL = a * fPan.CG(f,1) + b;
                     if (fPan.CG(f,0) > xL) {
-                        if (abs(fPan.CG(f,2) - zL) < 1.01 * fPan.deltaMG) {
+                        if (abs(fPan.CG(f,2) - zL) < 0.99*fPan.deltaZ) {
                             fPan.wMap(f) = 1;
                             fPan.nW++;
                             break;

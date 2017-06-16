@@ -23,13 +23,12 @@
 #include "infcBF.h"
 
 #define NDIM 3
-#define NMG 7
 #define NSING 6
 
 using namespace std;
 using namespace Eigen;
 
-array<RowVectorXd,42> split_panel(int idP, int idF,
+array<RowVectorXd,NSING> split_panel(int idP, int idF,
                                   double x0, double x1, double x2, double x3, double y0, double y1, double y2, double y3,
                                   Network &bPan, Field &fPan, Subpanel &sp) {
 
@@ -45,56 +44,20 @@ array<RowVectorXd,42> split_panel(int idP, int idF,
     yV1.resize(sp.NS);
     yV2.resize(sp.NS);
     yV3.resize(sp.NS);
-    MatrixX3d tgt; // target points
-    tgt.resize(NMG, NDIM);
+    Vector3d tgt; // target points
+    tgt.resize(NDIM);
 
-    array <RowVectorXd, 42> coeff; // returned and temporary coefficients
+    array <RowVectorXd, NSING> coeff; // returned and temporary coefficients
     array <double, NSING> coeffT;
-    for (int i = 0; i < 42; i++)
+    for (int i = 0; i < NSING; i++)
         coeff[i].resize(sp.NS);
 
     //// Change coordinates
     // Cell center
-    tgt(0,0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*fPan.CG(idF,2);
-    tgt(0,1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*fPan.CG(idF,2);
-    tgt(0,2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0)) + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
+    tgt(0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*fPan.CG(idF,2);
+    tgt(1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*fPan.CG(idF,2);
+    tgt(2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0)) + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
                + bPan.n(idP,2)*(fPan.CG(idF,2) - bPan.CG(idP,2));
-    // X-bwd
-    tgt(1,0) = bPan.l(idP,0)*(fPan.CG(idF,0)-fPan.deltaMG) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*fPan.CG(idF,2);
-    tgt(1,1) = bPan.p(idP,0)*(fPan.CG(idF,0)-fPan.deltaMG) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*fPan.CG(idF,2);
-    tgt(1,2) = bPan.n(idP,0)*(fPan.CG(idF,0)-fPan.deltaMG - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2) - bPan.CG(idP,2));
-    // X-fwd
-    tgt(2,0) = bPan.l(idP,0)*(fPan.CG(idF,0)+fPan.deltaMG) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*fPan.CG(idF,2);
-    tgt(2,1) = bPan.p(idP,0)*(fPan.CG(idF,0)+fPan.deltaMG) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*fPan.CG(idF,2);
-    tgt(2,2) = bPan.n(idP,0)*(fPan.CG(idF,0)+fPan.deltaMG - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2) - bPan.CG(idP,2));
-    // Y-bwd
-    tgt(3,0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*(fPan.CG(idF,1)-fPan.deltaMG) + bPan.l(idP,2)*fPan.CG(idF,2);
-    tgt(3,1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*(fPan.CG(idF,1)-fPan.deltaMG) + bPan.p(idP,2)*fPan.CG(idF,2);
-    tgt(3,2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1)-fPan.deltaMG - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2) - bPan.CG(idP,2));
-    // Y-fwd
-    tgt(4,0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*(fPan.CG(idF,1)+fPan.deltaMG) + bPan.l(idP,2)*fPan.CG(idF,2);
-    tgt(4,1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*(fPan.CG(idF,1)+fPan.deltaMG) + bPan.p(idP,2)*fPan.CG(idF,2);
-    tgt(4,2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1)+fPan.deltaMG - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2) - bPan.CG(idP,2));
-    // Z-bwd
-    tgt(5,0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*(fPan.CG(idF,2)-fPan.deltaMG);
-    tgt(5,1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*(fPan.CG(idF,2)-fPan.deltaMG);
-    tgt(5,2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2)-fPan.deltaMG - bPan.CG(idP,2));
-    // Z-fwd
-    tgt(6,0) = bPan.l(idP,0)*fPan.CG(idF,0) + bPan.l(idP,1)*fPan.CG(idF,1) + bPan.l(idP,2)*(fPan.CG(idF,2)+fPan.deltaMG);
-    tgt(6,1) = bPan.p(idP,0)*fPan.CG(idF,0) + bPan.p(idP,1)*fPan.CG(idF,1) + bPan.p(idP,2)*(fPan.CG(idF,2)+fPan.deltaMG);
-    tgt(6,2) = bPan.n(idP,0)*(fPan.CG(idF,0) - bPan.CG(idP,0))
-               + bPan.n(idP,1)*(fPan.CG(idF,1) - bPan.CG(idP,1))
-               + bPan.n(idP,2)*(fPan.CG(idF,2)+fPan.deltaMG - bPan.CG(idP,2));
 
     //// Split panel
     // Compute sub-panels vertices
@@ -119,20 +82,18 @@ array<RowVectorXd,42> split_panel(int idP, int idF,
         }
     }
     //// Compute AIC
-    for (int i = 0; i < NMG; i++) {
-        for (int j = 0; j < sp.NS; j++) {
-            // call infcBB
-            coeffT = infcBF(0, xV0(j), xV1(j), xV2(j), xV3(j), yV0(j), yV1(j), yV2(j), yV3(j),
-                            tgt(i,0), tgt(i,1), tgt(i,2), bPan.l(idP,0), bPan.l(idP,1), bPan.l(idP,2),
-                            bPan.p(idP,0), bPan.p(idP,1), bPan.p(idP,2), bPan.n(idP,0), bPan.n(idP,1), bPan.n(idP,2));
-            // Store to return
-            coeff[i*NSING+0](j) = coeffT[0];
-            coeff[i*NSING+1](j) = coeffT[1];
-            coeff[i*NSING+2](j) = coeffT[2];
-            coeff[i*NSING+3](j) = coeffT[3];
-            coeff[i*NSING+4](j) = coeffT[4];
-            coeff[i*NSING+5](j) = coeffT[5];
-        }
+    for (int j = 0; j < sp.NS; j++) {
+        // call infcBB
+        coeffT = infcBF(0, xV0(j), xV1(j), xV2(j), xV3(j), yV0(j), yV1(j), yV2(j), yV3(j),
+                        tgt(0), tgt(1), tgt(2), bPan.l(idP,0), bPan.l(idP,1), bPan.l(idP,2),
+                        bPan.p(idP,0), bPan.p(idP,1), bPan.p(idP,2), bPan.n(idP,0), bPan.n(idP,1), bPan.n(idP,2));
+        // Store to return
+        coeff[0](j) = coeffT[0];
+        coeff[1](j) = coeffT[1];
+        coeff[2](j) = coeffT[2];
+        coeff[3](j) = coeffT[3];
+        coeff[4](j) = coeffT[4];
+        coeff[5](j) = coeffT[5];
     }
     return coeff;
 }

@@ -20,7 +20,7 @@ struct Field {
     int nF = 0; // Number of field cells
     Eigen::MatrixX3d CG; // Coordinates of field CGs
     Eigen::MatrixX2d vX, vY, vZ; // Coordinates of field vertices
-    double deltaX, deltaY, deltaZ, deltaMG = 0; // Cell X, Y, Z and minigrid size
+    double deltaX, deltaY, deltaZ; // Cell X, Y, Z and minigrid size
     int nE = 0; // Number of external field cells
 	int nI = 0; // Number of internal field cells
 	int nW = 0; // Number of field cells in the wake

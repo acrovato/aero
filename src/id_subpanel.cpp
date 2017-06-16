@@ -93,43 +93,6 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
         spAIC.Bu.push_back(mTemp);
         spAIC.Bv.push_back(mTemp);
         spAIC.Bw.push_back(mTemp);
-        // Minigrid
-        spAIC.AuXbwd.push_back(mTemp);
-        spAIC.AvXbwd.push_back(mTemp);
-        spAIC.AwXbwd.push_back(mTemp);
-        spAIC.BuXbwd.push_back(mTemp);
-        spAIC.BvXbwd.push_back(mTemp);
-        spAIC.BwXbwd.push_back(mTemp);
-        spAIC.AuXfwd.push_back(mTemp);
-        spAIC.AvXfwd.push_back(mTemp);
-        spAIC.AwXfwd.push_back(mTemp);
-        spAIC.BuXfwd.push_back(mTemp);
-        spAIC.BvXfwd.push_back(mTemp);
-        spAIC.BwXfwd.push_back(mTemp);
-        spAIC.AuYbwd.push_back(mTemp);
-        spAIC.AvYbwd.push_back(mTemp);
-        spAIC.AwYbwd.push_back(mTemp);
-        spAIC.BuYbwd.push_back(mTemp);
-        spAIC.BvYbwd.push_back(mTemp);
-        spAIC.BwYbwd.push_back(mTemp);
-        spAIC.AuYfwd.push_back(mTemp);
-        spAIC.AvYfwd.push_back(mTemp);
-        spAIC.AwYfwd.push_back(mTemp);
-        spAIC.BuYfwd.push_back(mTemp);
-        spAIC.BvYfwd.push_back(mTemp);
-        spAIC.BwYfwd.push_back(mTemp);
-        spAIC.AuZbwd.push_back(mTemp);
-        spAIC.AvZbwd.push_back(mTemp);
-        spAIC.AwZbwd.push_back(mTemp);
-        spAIC.BuZbwd.push_back(mTemp);
-        spAIC.BvZbwd.push_back(mTemp);
-        spAIC.BwZbwd.push_back(mTemp);
-        spAIC.AuZfwd.push_back(mTemp);
-        spAIC.AvZfwd.push_back(mTemp);
-        spAIC.AwZfwd.push_back(mTemp);
-        spAIC.BuZfwd.push_back(mTemp);
-        spAIC.BvZfwd.push_back(mTemp);
-        spAIC.BwZfwd.push_back(mTemp);
     }
 
     //// Control display

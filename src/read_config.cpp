@@ -83,10 +83,7 @@ void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, dou
                 stringstream ss(line);
                 ss >> name >> symbol >> numValue >> comment_symbol >> comment;
 
-                if (name == "MGsize") {
-                    numC.SIZEMG = numValue;
-                }
-                else if (name == "boxTol") {
+                if (name == "boxTol") {
                     numC.TOLB = numValue;
                 }
                 else if (name == "singTol") {
@@ -230,7 +227,6 @@ void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, dou
 
     cout << "Done reading config file!" << endl;
     cout << "XZ symmetry: " << symY << endl;
-    cout << "Minigrid size: " << numC.SIZEMG << endl;
     cout << "Tolerance on box: " << numC.TOLB << endl;
     cout << "Tolerance on singularity: " << numC.TOLS << endl;
     cout << "Order of magnitude of residual reduction: " << numC.RRED << endl;

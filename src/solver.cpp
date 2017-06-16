@@ -51,7 +51,6 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     Body_AIC b2bAIC = {}; // body to body
     Body2field_AIC b2fAIC = {}; // body to field
     Field_AIC f2fAIC, f2bAIC = {}; // field to field and field to body
-    Minigrid_AIC mgAIC = {}; // field to field and field to body (minigrid)
     Subpanel_AIC spAIC = {}; // body to field (sub-panel)
 
     // Singularities
@@ -79,25 +78,12 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
 
     MatrixX3d vSigma; // Velocity induced by field sources on body
     vSigma = MatrixXd::Zero(bPan.nP, NDIM);
-    Minigrid mgVar = {}; // Minigrid variables
-    mgVar.rhoXbwd.resize(fPan.nF);
-    mgVar.rhoXfwd.resize(fPan.nF);
-    mgVar.rhoYbwd.resize(fPan.nF);
-    mgVar.rhoYfwd.resize(fPan.nF);
-    mgVar.rhoZbwd.resize(fPan.nF);
-    mgVar.rhoZfwd.resize(fPan.nF);
-    mgVar.UXbwd.resize(fPan.nF, NDIM);
-    mgVar.UXfwd.resize(fPan.nF, NDIM);
-    mgVar.UYbwd.resize(fPan.nF, NDIM);
-    mgVar.UYfwd.resize(fPan.nF, NDIM);
-    mgVar.UZbwd.resize(fPan.nF, NDIM);
-    mgVar.UZfwd.resize(fPan.nF, NDIM);
 
     //// Identify sub-panels
     id_subpanel(bPan, fPan, sp, spAIC);
 
     //// Build AIC matrices
-    build_AIC(symY, bPan, wPan, fPan, b2bAIC, b2fAIC, f2fAIC, f2bAIC, mgAIC, sp, spAIC);
+    build_AIC(symY, bPan, wPan, fPan, b2bAIC, b2fAIC, f2fAIC, f2bAIC, sp, spAIC);
 
     //// Solver
     // Field Panel Method
@@ -111,18 +97,11 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             // Panel prediction and boundary condition
             solve_body(vInf, RHS, vSigma, bPan, b2bAIC);
             // Field correction
-            solve_field(Minf, vInf, bPan, fPan, mgVar, sp, b2fAIC, f2fAIC, mgAIC, spAIC);
+            solve_field(Minf, vInf, bPan, fPan, sp, b2fAIC, f2fAIC, spAIC);
             // Source induced velocity (to recompute B.C.)
             vSigma.col(0) = f2bAIC.Cu * fPan.sigma;
             vSigma.col(1) = f2bAIC.Cv * fPan.sigma;
             vSigma.col(2) = f2bAIC.Cw * fPan.sigma;
-            // Residual
-            for (int i = 0; i < fPan.nF; ++i) {
-                if (fPan.fMap(i) && !fPan.wMap(i))
-                    fPan.epsilon(i) = 0.5 * (mgVar.UXfwd(i,0)-mgVar.UXbwd(i,0) + mgVar.UYfwd(i,1)-mgVar.UYbwd(i,1) + mgVar.UZfwd(i,2)-mgVar.UZbwd(i,2)) / fPan.deltaMG - fPan.sigma(i);
-                else
-                    fPan.epsilon(i) = 0;
-            }
             // Stop criterion
             for (int i = 0; i < fPan.nF; ++i)
                 deltaSigma(i) = abs(fPan.sigma(i) - sigmaTmp(i));

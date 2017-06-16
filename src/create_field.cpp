@@ -52,7 +52,6 @@ void create_field(array<array<double, 3>, 8> &box, Numerical_CST &numC, Field &f
         Z0(k) = box[0][2] + k * fPan.deltaZ;
         Z1(k) = box[0][2] + (k + 1) * fPan.deltaZ;
     }
-    fPan.deltaMG = min({fPan.deltaX, fPan.deltaY, fPan.deltaZ}) * numC.SIZEMG;
 
     // Center points & corner points
     for (int j = 0; j < fPan.nY; ++j) {
