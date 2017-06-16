@@ -13,12 +13,8 @@
 struct Subpanel_AIC {
 
     // Cell center
-    std::vector <Eigen::MatrixXd> Au;
-    std::vector <Eigen::MatrixXd> Av;
-    std::vector <Eigen::MatrixXd> Aw;
-    std::vector <Eigen::MatrixXd> Bu;
-    std::vector <Eigen::MatrixXd> Bv;
-    std::vector <Eigen::MatrixXd> Bw;
+    std::vector <Eigen::MatrixXd> A;
+    std::vector <Eigen::MatrixXd> B;
 };
 
 #endif //FPMV1_SUBPANEL_AIC_H

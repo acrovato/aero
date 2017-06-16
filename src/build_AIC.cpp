@@ -10,22 +10,21 @@
 // - b2fAIC: body to field AICs (structure)
 // - f2fAIC: field to field AICs (structure)
 // - f2bAIC: field to body AICs (structure)
-// - mgAIC: body to field AICs for minigrid (structure)
 
 #include <iostream>
 #include <Eigen/Dense>
 #include <array>
 #include "build_AIC.h"
-#include "infcBB.h"
-#include "infcBF.h"
-#include "infcF.h"
+#include "infcB.h"
+#include "infcFF.h"
+#include "infcFB.h"
 #include "split_panel.h"
 
 using namespace std;
 using namespace Eigen;
 
 void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
-               Body_AIC &b2bAIC, Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Field_AIC &f2bAIC,
+               Body_AIC &b2bAIC, Body_AIC &b2fAIC, Field2field_AIC &f2fAIC, Field2body_AIC &f2bAIC,
                Subpanel &sp, Subpanel_AIC &spAIC) {
 
     //// Initialization
@@ -36,16 +35,16 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     Vector3d trsfColloc, trsfCorner1, trsfCorner2, trsfCorner3, trsfCorner4; // colloc (i) and corner (j) in local (j) coordinates
 
     Matrix3d glob2loc; // transformation matrix
-    array<double, 2> coeffBB; // body to body influence container
-    array<double, 6> coeffBF; // body to field influence container
+    array<double, 2> coeffB; // body influence container
 
-    array<RowVectorXd, 6> coeffSP; // body to field influence container for subpanel
-    for (int i = 0; i < 6; i++)
+    array<RowVectorXd, 2> coeffSP; // body to field influence container for subpanel
+    for (int i = 0; i < 2; i++)
         coeffSP[i].resize(sp.NS);
 
     array<double,2> xC, yC, zC; // cell vertices
     double x, y, z; // cell center
-    array<double,3> coeffF; // field influence container
+    double coeffFF; // field to field influence container
+    array<double,3> coeffFB; // field to body influence container
 
     //// Begin
     cout << "Building AIC matrices... " << flush;
@@ -53,20 +52,12 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
     // Resize AIC matrices (regular)
     b2bAIC.A.resize(bPan.nP, bPan.nP);
     b2bAIC.B.resize(bPan.nP, bPan.nP);
-    b2fAIC.Au.resize(fPan.nF, bPan.nP);
-    b2fAIC.Av.resize(fPan.nF, bPan.nP);
-    b2fAIC.Aw.resize(fPan.nF, bPan.nP);
-    b2fAIC.Bu.resize(fPan.nF, bPan.nP);
-    b2fAIC.Bv.resize(fPan.nF, bPan.nP);
-    b2fAIC.Bw.resize(fPan.nF, bPan.nP);
-    f2fAIC.Cu.resize(fPan.nF, fPan.nF);
-    f2fAIC.Cv.resize(fPan.nF, fPan.nF);
-    f2fAIC.Cw.resize(fPan.nF, fPan.nF);
+    b2fAIC.A.resize(fPan.nF, bPan.nP);
+    b2fAIC.B.resize(fPan.nF, bPan.nP);
+    f2fAIC.C.resize(fPan.nF, fPan.nF);
     f2bAIC.Cu.resize(bPan.nP, fPan.nF);
     f2bAIC.Cv.resize(bPan.nP, fPan.nF);
     f2bAIC.Cw.resize(bPan.nP, fPan.nF);
-
-    // TODO: rework build_AIC. Group parts with minigrid.
 
     //// Panel AIC
     for (int j = 0; j < bPan.nP; ++j) {
@@ -91,11 +82,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             trsfColloc = bPan.CG.row(i).transpose();
             trsfColloc = glob2loc * trsfColloc;
 
-            coeffBB = infcBB(0,i,j, trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
+            coeffB = infcB(0,i,j, trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
                            trsfCorner2(0),trsfCorner2(1),trsfCorner3(0),trsfCorner3(1),trsfCorner4(0),trsfCorner4(1));
 
-            b2bAIC.A(i,j) = coeffBB[0];
-            b2bAIC.B(i,j) = coeffBB[1];
+            b2bAIC.A(i,j) = coeffB[0];
+            b2bAIC.B(i,j) = coeffB[1];
         }
 
         // panel to field
@@ -108,20 +99,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 coeffSP = split_panel(j, i, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
                                       trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
                                       bPan, fPan, sp);
-                /// Center
-                spAIC.Au[jj].row(ii) = coeffSP[0];
-                spAIC.Av[jj].row(ii) = coeffSP[1];
-                spAIC.Aw[jj].row(ii) = coeffSP[2];
-                spAIC.Bu[jj].row(ii) = coeffSP[3];
-                spAIC.Bv[jj].row(ii) = coeffSP[4];
-                spAIC.Bw[jj].row(ii) = coeffSP[5];
+                spAIC.A[jj].row(ii) = coeffSP[0];
+                spAIC.B[jj].row(ii) = coeffSP[1];
                 // Set global AIC to 0
-                b2fAIC.Au(i,j) = 0;
-                b2fAIC.Av(i,j) = 0;
-                b2fAIC.Aw(i,j) = 0;
-                b2fAIC.Bu(i,j) = 0;
-                b2fAIC.Bv(i,j) = 0;
-                b2fAIC.Bw(i,j) = 0;
+                b2fAIC.A(i,j) = 0;
+                b2fAIC.B(i,j) = 0;
 
                 // Set flags
                 if (ii == 0)
@@ -130,7 +112,6 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                     ii++;
             }
             else {
-                // Center
                 dist(0) = fPan.CG(i,0) - bPan.CG(j,0);
                 dist(1) = fPan.CG(i,1) - bPan.CG(j,1);
                 dist(2) = fPan.CG(i,2) - bPan.CG(j,2);
@@ -138,17 +119,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = fPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffBF = infcBF(0, trsfCorner1(0), trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                 trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                 trsfColloc(0), trsfColloc(1), dist(2),
-                                 bPan.l(j, 0), bPan.l(j, 1), bPan.l(j, 2), bPan.p(j, 0), bPan.p(j, 1), bPan.p(j, 2),
-                                 bPan.n(j, 0), bPan.n(j, 1), bPan.n(j, 2));
-                b2fAIC.Au(i,j) = coeffBF[0];
-                b2fAIC.Av(i,j) = coeffBF[1];
-                b2fAIC.Aw(i,j) = coeffBF[2];
-                b2fAIC.Bu(i,j) = coeffBF[3];
-                b2fAIC.Bv(i,j) = coeffBF[4];
-                b2fAIC.Bw(i,j) = coeffBF[5];
+                coeffB = infcB(0, 0, 1, trsfColloc(0), trsfColloc(1), dist(2), trsfCorner1(0), trsfCorner1(1),
+                                 trsfCorner2(0), trsfCorner2(1), trsfCorner3(0), trsfCorner3(1), trsfCorner4(0), trsfCorner4(1));
+
+                b2fAIC.A(i,j) = coeffB[0];
+                b2fAIC.B(i,j) = coeffB[1];
             }
             if (i == fPan.nF-1 && FLAG && jj < sp.sI.size()-1)
                 jj++;
@@ -185,11 +160,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = bPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffBB = infcBB(0,0,1,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
+                coeffB = infcB(0,0,1,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
                                trsfCorner2(0),trsfCorner2(1),trsfCorner3(0),trsfCorner3(1),trsfCorner4(0),trsfCorner4(1));
 
-                b2bAIC.A(i,j) -= coeffBB[0]; // minus sign because corner order is trigonometric!
-                b2bAIC.B(i,j) -= coeffBB[1];
+                b2bAIC.A(i,j) -= coeffB[0]; // minus sign because corner order is trigonometric!
+                b2bAIC.B(i,j) -= coeffB[1];
             }
 
             // panel to field
@@ -201,18 +176,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = fPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffBF = infcBF(0, trsfCorner1(0) ,trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                 trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                 trsfColloc(0), trsfColloc(1), dist(2),
-                                 bPan.l(j,0), -bPan.l(j,1), bPan.l(j,2), -bPan.p(j,0), bPan.p(j,1), -bPan.p(j,2),
-                                 bPan.n(j,0), -bPan.n(j,1), bPan.n(j,2));
+                coeffB = infcB(0, 0, 1, trsfColloc(0), trsfColloc(1), dist(2), trsfCorner1(0), trsfCorner1(1),
+                                trsfCorner2(0), trsfCorner2(1), trsfCorner3(0), trsfCorner3(1), trsfCorner4(0), trsfCorner4(1));
 
-                b2fAIC.Au(i,j) -= coeffBF[0];
-                b2fAIC.Av(i,j) -= coeffBF[1];
-                b2fAIC.Aw(i,j) -= coeffBF[2];
-                b2fAIC.Bu(i,j) -= coeffBF[3];
-                b2fAIC.Bv(i,j) -= coeffBF[4];
-                b2fAIC.Bw(i,j) -= coeffBF[5];
+                b2fAIC.A(i,j) -= coeffB[0];
+                b2fAIC.B(i,j) -= coeffB[1];
             }
         }
     }
@@ -242,11 +210,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             trsfColloc = bPan.CG.row(i).transpose();
             trsfColloc = glob2loc * trsfColloc;
 
-            coeffBB = infcBB(1,i,j,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
+            coeffB = infcB(1,i,j,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
                            trsfCorner2(0),trsfCorner2(1),trsfCorner3(0),trsfCorner3(1),trsfCorner4(0),trsfCorner4(1));
 
-            b2bAIC.A(i, j * bPan.nC_) += coeffBB[0];
-            b2bAIC.A(i, (j + 1) * bPan.nC_ - 1) -= coeffBB[0];
+            b2bAIC.A(i, j * bPan.nC_) += coeffB[0];
+            b2bAIC.A(i, (j + 1) * bPan.nC_ - 1) -= coeffB[0];
         }
 
         // panel to field
@@ -258,18 +226,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             trsfColloc = fPan.CG.row(i).transpose();
             trsfColloc = glob2loc * trsfColloc;
 
-            coeffBF = infcBF(1, trsfCorner1(0) ,trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                             trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                             trsfColloc(0), trsfColloc(1), dist(2),
-                             wPan.l(j,0), wPan.l(j,1), wPan.l(j,2), wPan.p(j,0), wPan.p(j,1), wPan.p(j,2),
-                             wPan.n(j,0), wPan.n(j,1), wPan.n(j,2));
+            coeffB = infcB(1, 0, 1, trsfColloc(0), trsfColloc(1), dist(2), trsfCorner1(0), trsfCorner1(1),
+                            trsfCorner2(0), trsfCorner2(1), trsfCorner3(0), trsfCorner3(1), trsfCorner4(0), trsfCorner4(1));
 
-            b2fAIC.Au(i, j * bPan.nC_) += coeffBF[0];
-            b2fAIC.Au(i, (j + 1) * bPan.nC_ - 1) -= coeffBF[0];
-            b2fAIC.Av(i, j * bPan.nC_) += coeffBF[1];
-            b2fAIC.Av(i, (j + 1) * bPan.nC_ - 1) -= coeffBF[1];
-            b2fAIC.Aw(i, j * bPan.nC_) += coeffBF[2];
-            b2fAIC.Aw(i, (j + 1) * bPan.nC_ - 1) -= coeffBF[2];
+            b2fAIC.A(i, j * bPan.nC_) += coeffB[0];
+            b2fAIC.A(i, (j + 1) * bPan.nC_ - 1) -= coeffB[0];
         }
     }
 
@@ -302,11 +263,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = bPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffBB = infcBB(1,0,1,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
+                coeffB = infcB(1,0,1,trsfColloc(0),trsfColloc(1),dist(2),trsfCorner1(0),trsfCorner1(1),
                                trsfCorner2(0),trsfCorner2(1),trsfCorner3(0),trsfCorner3(1),trsfCorner4(0),trsfCorner4(1));
 
-                b2bAIC.A(i, j * bPan.nC_) -= coeffBB[0];
-                b2bAIC.A(i, (j + 1) * bPan.nC_ - 1) += coeffBB[0];
+                b2bAIC.A(i, j * bPan.nC_) -= coeffB[0];
+                b2bAIC.A(i, (j + 1) * bPan.nC_ - 1) += coeffB[0];
             }
 
             // panel to field
@@ -318,18 +279,11 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 trsfColloc = fPan.CG.row(i).transpose();
                 trsfColloc = glob2loc * trsfColloc;
 
-                coeffBF = infcBF(1, trsfCorner1(0) ,trsfCorner2(0), trsfCorner3(0), trsfCorner4(0),
-                                 trsfCorner1(1), trsfCorner2(1), trsfCorner3(1), trsfCorner4(1),
-                                 trsfColloc(0), trsfColloc(1), dist(2),
-                                 wPan.l(j,0), -wPan.l(j,1), wPan.l(j,2), -wPan.p(j,0), wPan.p(j,1), -wPan.p(j,2),
-                                 wPan.n(j,0), -wPan.n(j,1), wPan.n(j,2));
+                coeffB = infcB(1, 0, 1, trsfColloc(0), trsfColloc(1), dist(2), trsfCorner1(0), trsfCorner1(1),
+                                trsfCorner2(0), trsfCorner2(1), trsfCorner3(0), trsfCorner3(1), trsfCorner4(0), trsfCorner4(1));
 
-                b2fAIC.Au(i, j * bPan.nC_) -= coeffBF[0];
-                b2fAIC.Au(i, (j + 1) * bPan.nC_ - 1) += coeffBF[0];
-                b2fAIC.Av(i, j * bPan.nC_) -= coeffBF[1];
-                b2fAIC.Av(i, (j + 1) * bPan.nC_ - 1) += coeffBF[1];
-                b2fAIC.Aw(i, j * bPan.nC_) -= coeffBF[2];
-                b2fAIC.Aw(i, (j + 1) * bPan.nC_ - 1) += coeffBF[2];
+                b2fAIC.A(i, j * bPan.nC_) -= coeffB[0];
+                b2fAIC.A(i, (j + 1) * bPan.nC_ - 1) += coeffB[0];
             }
         }
     }
@@ -347,22 +301,16 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
         x = fPan.CG(j,0) - fPan.CG(j,0);
         y = fPan.CG(j,1) - fPan.CG(j,1);
         z = fPan.CG(j,2) - fPan.CG(j,2);
-        coeffF = infcF(x, y, z, xC, yC, zC);
-        f2fAIC.Cu(j,j) = coeffF[0];
-        f2fAIC.Cv(j,j) = coeffF[1];
-        f2fAIC.Cw(j,j) = coeffF[2];
+        coeffFF = infcFF(x, y, z, xC, yC, zC);
+        f2fAIC.C(j,j) = coeffFF;
         // Field to field
         for (int i = j+1; i < fPan.nF; ++i) {
             x = fPan.CG(i,0) - fPan.CG(j,0);
             y = fPan.CG(i,1) - fPan.CG(j,1);
             z = fPan.CG(i,2) - fPan.CG(j,2);
-            coeffF = infcF(x, y, z, xC, yC, zC);
-            f2fAIC.Cu(i,j) = coeffF[0];
-            f2fAIC.Cv(i,j) = coeffF[1];
-            f2fAIC.Cw(i,j) = coeffF[2];
-            f2fAIC.Cu(j,i) = -coeffF[0];
-            f2fAIC.Cv(j,i) = -coeffF[1];
-            f2fAIC.Cw(j,i) = -coeffF[2];
+            coeffFF = infcFF(x, y, z, xC, yC, zC);
+            f2fAIC.C(i,j) = coeffFF;
+            f2fAIC.C(j,i) = coeffFF;
         }
 
         // Field to panel
@@ -370,10 +318,10 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
             x = bPan.CG(i,0) - fPan.CG(j,0);
             y = bPan.CG(i,1) - fPan.CG(j,1);
             z = bPan.CG(i,2) - fPan.CG(j,2);
-            coeffF = infcF(x, y, z, xC, yC, zC);
-            f2bAIC.Cu(i,j) = coeffF[0];
-            f2bAIC.Cv(i,j) = coeffF[1];
-            f2bAIC.Cw(i,j) = coeffF[2];
+            coeffFB = infcFB(x, y, z, xC, yC, zC);
+            f2bAIC.Cu(i,j) = coeffFB[0];
+            f2bAIC.Cv(i,j) = coeffFB[1];
+            f2bAIC.Cw(i,j) = coeffFB[2];
         }
     }
 
@@ -392,10 +340,8 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 x = fPan.CG(i,0) - fPan.CG(j,0);
                 y = fPan.CG(i,1) + fPan.CG(j,1);
                 z = fPan.CG(i,2) - fPan.CG(j,2);
-                coeffF = infcF(x, y, z, xC, yC, zC);
-                f2fAIC.Cu(i,j) += coeffF[0];
-                f2fAIC.Cv(i,j) += coeffF[1];
-                f2fAIC.Cw(i,j) += coeffF[2];
+                coeffFF = infcFF(x, y, z, xC, yC, zC);
+                f2fAIC.C(i,j) += coeffFF;
             }
 
             // Field to panel
@@ -403,10 +349,10 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
                 x = bPan.CG(i,0) - fPan.CG(j,0);
                 y = bPan.CG(i,1) + fPan.CG(j,1);
                 z = bPan.CG(i,2) - fPan.CG(j,2);
-                coeffF = infcF(x, y, z, xC, yC, zC);
-                f2bAIC.Cu(i,j) += coeffF[0];
-                f2bAIC.Cv(i,j) += coeffF[1];
-                f2bAIC.Cw(i,j) += coeffF[2];
+                coeffFB = infcFB(x, y, z, xC, yC, zC);
+                f2bAIC.Cu(i,j) += coeffFB[0];
+                f2bAIC.Cv(i,j) += coeffFB[1];
+                f2bAIC.Cw(i,j) += coeffFB[2];
             }
         }
     }

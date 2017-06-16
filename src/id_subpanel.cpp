@@ -87,12 +87,8 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
         size = sp.fI[i].size();
         mTemp = MatrixXd::Zero(size, sp.NS);
         // Field
-        spAIC.Au.push_back(mTemp);
-        spAIC.Av.push_back(mTemp);
-        spAIC.Aw.push_back(mTemp);
-        spAIC.Bu.push_back(mTemp);
-        spAIC.Bv.push_back(mTemp);
-        spAIC.Bw.push_back(mTemp);
+        spAIC.A.push_back(mTemp);
+        spAIC.B.push_back(mTemp);
     }
 
     //// Control display

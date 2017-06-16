@@ -48,9 +48,9 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
 
     //// Initialization
     // AIC matrices
-    Body_AIC b2bAIC = {}; // body to body
-    Body2field_AIC b2fAIC = {}; // body to field
-    Field_AIC f2fAIC, f2bAIC = {}; // field to field and field to body
+    Body_AIC b2bAIC = {}, b2fAIC = {}; // body to body and body to field
+    Field2field_AIC f2fAIC = {}; // field to field
+    Field2body_AIC f2bAIC = {}; // field to field and field to body
     Subpanel_AIC spAIC = {}; // body to field (sub-panel)
 
     // Singularities
@@ -58,6 +58,7 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     bPan.mu.resize(bPan.nP);
     fPan.sigma = VectorXd::Zero(fPan.nF);
     // Flow variables // TODO check if initialization is useful
+    fPan.phi = VectorXd::Zero(fPan.nF);
     fPan.M = VectorXd::Zero(fPan.nF);
     fPan.U = MatrixX3d::Zero(fPan.nF, NDIM);
     fPan.rho = VectorXd::Zero(fPan.nF);

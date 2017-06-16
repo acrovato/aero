@@ -25,10 +25,10 @@ set(SOURCE_FILES src/main.cpp
         src/solver.cpp
         src/id_subpanel.cpp
         src/build_AIC.cpp
-        src/infcBB.cpp
+        src/infcB.cpp
         src/split_panel.cpp
-        src/infcBF.cpp
-        src/infcF.cpp
+        src/infcFF.cpp
+        src/infcFB.cpp
         src/solve_body.cpp
         src/solve_field.cpp
         src/compute_fVars.cpp

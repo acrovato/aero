@@ -24,7 +24,7 @@ using  namespace Eigen;
 #define M_C 1.0
 
 void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subpanel &sp,
-                 Body2field_AIC &b2fAIC, Field_AIC &f2fAIC, Subpanel_AIC &spAIC) {
+                 Body_AIC &b2fAIC, Field2field_AIC &f2fAIC, Subpanel_AIC &spAIC) {
 
     int idx; // counter
     int ost = 0; // cell offset for finite differencing

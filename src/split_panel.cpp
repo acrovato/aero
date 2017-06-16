@@ -20,10 +20,10 @@
 #include <Eigen/Dense>
 #include <array>
 #include "split_panel.h"
-#include "infcBF.h"
+#include "infcB.h"
 
 #define NDIM 3
-#define NSING 6
+#define NSING 2
 
 using namespace std;
 using namespace Eigen;
@@ -81,19 +81,14 @@ array<RowVectorXd,NSING> split_panel(int idP, int idF,
             idx ++;
         }
     }
+
     //// Compute AIC
     for (int j = 0; j < sp.NS; j++) {
         // call infcBB
-        coeffT = infcBF(0, xV0(j), xV1(j), xV2(j), xV3(j), yV0(j), yV1(j), yV2(j), yV3(j),
-                        tgt(0), tgt(1), tgt(2), bPan.l(idP,0), bPan.l(idP,1), bPan.l(idP,2),
-                        bPan.p(idP,0), bPan.p(idP,1), bPan.p(idP,2), bPan.n(idP,0), bPan.n(idP,1), bPan.n(idP,2));
+        coeffT = infcB(0, 0, 1, tgt(0), tgt(1), tgt(2), xV0(j), yV0(j), xV1(j), yV1(j), xV2(j), yV2(j), xV3(j), yV3(j));
         // Store to return
         coeff[0](j) = coeffT[0];
         coeff[1](j) = coeffT[1];
-        coeff[2](j) = coeffT[2];
-        coeff[3](j) = coeffT[3];
-        coeff[4](j) = coeffT[4];
-        coeff[5](j) = coeffT[5];
     }
     return coeff;
 }

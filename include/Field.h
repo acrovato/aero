@@ -31,6 +31,7 @@ struct Field {
 
 	// Flow
 	Eigen::VectorXd sigma; // Field panel source singularity
+	Eigen::VectorXd phi; // Potential
 	Eigen::MatrixX3d U; // Velocity components
 	Eigen::VectorXd M; // Mach number
 	Eigen::VectorXd rho; // Density
