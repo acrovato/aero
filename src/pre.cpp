@@ -1,8 +1,9 @@
-//// Preprocessing
+//// Pre-processing
 // Load settings and geometry from external files *.cfg and *.pts (located in /IO/)
 // Store information into relevant structures
 //
-// I/O:
+// Inputs:
+// - numC: list of numerical parameters (structure)
 // - symY: defines symmetry about Y axis
 // - sRef: reference surface of the full wing
 // - Minf: freestream Mach number

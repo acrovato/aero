@@ -1,4 +1,4 @@
-//// Field quantities writing
+//// Field variables writing
 // Write field variable in external .dat file
 //
 // I/O:

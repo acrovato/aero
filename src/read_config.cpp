@@ -1,9 +1,10 @@
-//// Read Configuration
-// Read data from /IO/*.cfg file (symmetry, mach number, angle of attack, field cells) and put them into relevant
-// variables
+//// Configuration reading
+// Read data from /IO/*.cfg file (numerical parameters, symmetry, mach number, angle of attack, field cells) and put
+// them into relevant variables
 //
 // I/O:
 // - path: path to *.cfg file
+// - numC: list of numerical parameters (structure)
 // - symY: defines symmetry about Y axis
 // - sRef: reference surface of the full wing
 // - machInf: freestream Mach number

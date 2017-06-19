@@ -1,9 +1,10 @@
-//// Map field
+//// Field mapping
 // Identify each cell as an interior or exterior (FLAG 0, 1). Also create vector of indexes associated to
-// field mapping type. Identify cells just above/below wake (FLAG 1 in wakeMap)
+// field mapping type. Identify cells just above/below wake (FLAG 1 in wakeMap).
 //
 // I/O:
 // - sGrid: temporary dynamic array containing body panel vertices
+// - numC: list of numerical parameters (structure)
 // - bPan: body panels (structure)
 // - fPan: field panels (structure)
 

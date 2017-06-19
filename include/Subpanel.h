@@ -1,10 +1,5 @@
-//// Subpanel
-// Structure containing information about subpanels
-//
-// - NS: number of sub-panel on each panel
-// - NS: number of sub-panel on each panel (along chord and span)
-// - sI: vector of surface panel indices
-// - fI: vector of vector of field indices (first dimension correspond to sI, second contains field indices)
+//// Subpanel structure
+// Structure containing information about sub-panels
 
 #ifndef FPMV1_SUBPANEL_H
 #define FPMV1_SUBPANEL_H

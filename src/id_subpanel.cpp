@@ -1,11 +1,11 @@
-//// Subpanel identification
+//// Sub-panel identification
 // Identify which field points are to close to which panel and prepare AIC matrices.
 //
 // I/O:
 // - bPan: body panels (structure)
 // - fPan: field panel (structure)
-// - sp: subpanels (structure)
-// - spAIC: subpanels AIC (structure)
+// - sp: sub-panels (structure)
+// - spAIC: sub-panels AIC (structure)
 //
 // CONSIDER USING vector of structs instead of struct of vectors
 // CONSIDER USING fixed size of boolean vector instead of spP

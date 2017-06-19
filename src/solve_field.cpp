@@ -1,4 +1,4 @@
-//// Solve field
+//// Compressible module (field solver)
 // Compute field variables and field sources
 //
 // I/O:
@@ -6,7 +6,7 @@
 // - vInf: freestream velocity vector
 // - bPan: (network of) body panels (structure)
 // - fPan: field panels (structure)
-// - sp: subpanels indices (structure)
+// - sp: sub-panels (structure)
 // - b2fAIC: body to field AIC (structure)
 // - f2fAIC: field to field AIC (structure)
 // - spAIC: body to field AIC for subpanels (structure)

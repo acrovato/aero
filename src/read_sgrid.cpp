@@ -1,4 +1,4 @@
-//// Read surface grid
+//// Surface grid reading
 // Read data from /IO/*.pts file which contain coordinates of points defining the corner of each panel
 //
 // I/O:

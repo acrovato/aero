@@ -1,5 +1,5 @@
-//// Split panel
-// Split a panel and compute AIC on each subpanel
+//// Panel splitting
+// Split a panel and compute AIC on each sub-panel
 //
 // Inputs:
 // - idP: influencing panel index

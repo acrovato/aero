@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 IF (UNIX)
     include_directories(include)
 ELSEIF(WIN32)
-    include_directories(include; C:/eigen-3.3.3/Eigen/)
+    include_directories(include; C:/Eigen-3.3.3/)
 ENDIF()
 set(SOURCE_FILES src/main.cpp
         src/pre.cpp

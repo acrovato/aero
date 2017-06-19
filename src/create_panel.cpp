@@ -1,4 +1,4 @@
-//// Create panel
+//// Body panels creation
 // Compute panel collocation point, surface, vertices, normal, longitudinal, transverse and perpendicular unit vectors
 // from data contained into sGrid
 //

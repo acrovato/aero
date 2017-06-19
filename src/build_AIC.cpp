@@ -1,4 +1,4 @@
-//// Build AIC
+//// AIC matrices building
 // Build AIC matrices for body to body, body to field, field to field, and field to body interactions
 //
 // I/O:
@@ -10,6 +10,8 @@
 // - b2fAIC: body to field AICs (structure)
 // - f2fAIC: field to field AICs (structure)
 // - f2bAIC: field to body AICs (structure)
+// - sp: sub-panels (structure)
+// - spAIC: body to field sub-panel AICs (structure)
 
 #include <iostream>
 #include <Eigen/Dense>

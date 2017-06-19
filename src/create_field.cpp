@@ -1,4 +1,4 @@
-//// Create field
+//// Field creation
 // Create field cells from data contained into box. Divide the initial box (whose coordinates are provided as input)
 // by the number of cells (also provided as input). Compute center and corner points of field cells.
 //
@@ -16,7 +16,7 @@
 using namespace std;
 using namespace Eigen;
 
-void create_field(array<array<double, 3>, 8> &box, Numerical_CST &numC, Field &fPan) {
+void create_field(array<array<double, 3>, 8> &box, Field &fPan) {
 
     // Temporary variables
     VectorXd X(fPan.nX,1), Y(fPan.nY,1), Z(fPan.nZ,1);

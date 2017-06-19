@@ -1,4 +1,4 @@
-//// Interpolate from center to vertices
+//// Interpolation from center to vertices
 // Interpolate linearly surface singularities from adjacent panel centers to panel vertices. If panel is on an edge of a
 // network, linear extrapolation is used instead
 //

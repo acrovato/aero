@@ -1,18 +1,12 @@
-//// Post-processing file
+//// Post-processing
 // Write surface and field quantities to file
 //
 // Inputs:
-//
-// *Geometry*
 // - sRef: reference surface of the full wing
-//
-// *Network*
-// - bPan: (network of) body panels
-// - fPan: (network of) field panels
-//
-// *Physics*
 // - Minf: freestream Mach number
 // - alpha: freestream angle of attack
+// - bPan: (network of) body panels
+// - fPan: (network of) field panels
 // - cL: lift coefficient
 // - cD: drag coefficient
 //

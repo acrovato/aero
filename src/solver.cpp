@@ -6,14 +6,16 @@
 // the Full Potential Equation)
 //
 // I/O:
+// - numC: list of numerical parameters (structure)
 // - symY: defines symmetry about Y axis
 // - sRef: reference surface of the full wing
-// - Minf: freestream Mach number
 // - alpha: freestream angle of attack
 // - vInf: freestream velocity vector
+// - Minf: freestream Mach number
 // - bPan: (network of) body panels (structure)
 // - wPan: (network of) wake panels (structure)
 // - fPan: field panels (structure)
+// - sp: sub-panels (structure)
 // - cL: lift coefficient
 // - cD: drag coefficient
 //

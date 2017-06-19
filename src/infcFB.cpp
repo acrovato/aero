@@ -1,4 +1,4 @@
-//// Field to body velocity influence coefficient
+//// Field to body velocity influence coefficient computation
 // Compute field source velocity influence coefficient between a field panel and a point
 //
 // Reference: Chu, L., Yates, E., & Kandil, O. (1989),
@@ -9,6 +9,9 @@
 // - xC: x coordinates of influencing field cell vertices
 // - yC: y coordinates of influencing field cell vertices
 // - zC: z coordinates of influencing field cell vertices
+//
+// Output:
+// - coeff: array of AIC ([0] = u, [1] = v, [2] = w)
 
 #include <iostream>
 #include <array>

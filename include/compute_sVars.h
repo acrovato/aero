@@ -3,7 +3,7 @@
 
 #include "Network.h"
 
-void compute_sVars(bool symY, double sRef, double alpha, double machInf, Eigen::Vector3d &vInf,
+void compute_sVars(bool symY, double sRef, double alpha, double Minf, Eigen::Vector3d &vInf,
                 Eigen::MatrixX3d &vSigma, Network &bPan, double &cL, double &cD);
 
 #endif //FPMV1_COMPUTE_SQ_H

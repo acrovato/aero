@@ -1,4 +1,4 @@
-//// main file
+//// Main
 // Link program modules (pre, solver, post)
 //
 // Variables accessed throughout the code
@@ -11,6 +11,7 @@
 // - bPan: (network of) body panels (structure)
 // - wPan: (network of) wake panels (structure)
 // - fPan: field panels (structure)
+// - sp: sub-panels (structure)
 //
 // *Physics*
 // - Minf: freestream Mach number
@@ -18,6 +19,9 @@
 // - vInf: freestream velocity vector
 // - cL: lift coefficient
 // - cD: drag coefficient
+//
+// *Numerics*
+// - numC: numerical parameters (structure)
 
 //// Acronym
 // - STREAM: Swift Transonic Enhanced Aerodynamic Modeling
@@ -37,6 +41,7 @@
 
 #include <iostream>
 #include <Eigen/Dense>
+#include <ctime>
 #include "pre.h"
 #include "solver.h"
 #include "post.h"

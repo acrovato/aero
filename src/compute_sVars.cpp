@@ -1,6 +1,16 @@
-// Flow Computation
-// Compute flow physical properties (body velocity and pressure and field mach)
-// Currently computes body velocity by FD, incompressible pressure coefficient and forces
+//// Surface variables computation
+// Compute flow physical properties such as body velocity, mach number, pressure and forces coefficients.
+//
+// I/O:
+// - symY: defines symmetry about Y axis
+// - sRef: reference surface of the full wing
+// - alpha: freestream angle of attack
+// - Minf: freestream Mach number
+// - vInf: freestream velocity vector
+// - vSigma: field source induced body velocity
+// - bPan: (network of) body panels (structure)
+// - cL: lift coefficient
+// - cD: drag coefficient
 
 #include <iostream>
 #include <Eigen/Dense>
@@ -13,7 +23,7 @@
 using namespace std;
 using namespace Eigen;
 
-void compute_sVars(bool symY, double sRef, double alpha, double machInf, Vector3d &vInf,
+void compute_sVars(bool symY, double sRef, double alpha, double Minf, Vector3d &vInf,
                MatrixX3d &vSigma, Network &bPan, double &cL, double &cD) {
 
     // Temporary variables
@@ -87,28 +97,28 @@ void compute_sVars(bool symY, double sRef, double alpha, double machInf, Vector3
         bPan.U(i, 2) += vInf(2);
     }
     // Source induced velocity
-    if (machInf != 0)
+    if (Minf != 0)
         bPan.U += vSigma;
     // Mach number
-    if (machInf == 0)
+    if (Minf == 0)
         bPan.M = VectorXd::Zero(bPan.nP);
     else {
         bPan.M.resize(bPan.nP);
         for (int i = 0; i < bPan.nP; ++i)
             bPan.M(i) = bPan.U.row(i).norm()
-                        / (1 / (machInf * machInf)
+                        / (1 / (Minf * Minf)
                            + (GAMMA - 1) / 2 - (GAMMA - 1) / 2 * bPan.U.row(i).dot(bPan.U.row(i)));
     }
     //// Aerodynamic forces
     // Pressure coefficient
-    if (machInf == 0) {
+    if (Minf == 0) {
         for (int i = 0; i < bPan.nP; ++i)
             bPan.cP(i) = 1 - bPan.U.row(i).dot(bPan.U.row(i)) / vInf.dot(vInf);
     }
     else {
         for (int i = 0; i < bPan.nP; ++i)
-            bPan.cP(i) = 2 / (GAMMA * machInf * machInf) *
-                (pow(1 + (GAMMA - 1) / 2 * machInf * machInf *
+            bPan.cP(i) = 2 / (GAMMA * Minf * Minf) *
+                (pow(1 + (GAMMA - 1) / 2 * Minf * Minf *
                                  (1 - bPan.U.row(i).dot(bPan.U.row(i))), GAMMA / (GAMMA - 1)) - 1);
     }
     // Forces (x,y,z)

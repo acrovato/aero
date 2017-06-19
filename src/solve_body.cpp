@@ -1,4 +1,4 @@
-//// Solve body
+//// Incompressible module (body solver)
 // Compute sources on the body surface from the updated  impermeability B.C. and solve for doublets on the body surface
 //
 // Ref: Katz & Plotkin (2001), Low-Speed Aerodynamics
@@ -8,7 +8,7 @@
 // I/O:
 // - vInf: freestream velocity vector
 // - RHS: right-hand side of the linear system of equations
-// - vSigma: field source induced velocty
+// - vSigma: field source induced body velocity
 // - bPan: (network of) body panels (structure)
 // - b2bAIC: body to body AIC (structure)
 
@@ -36,7 +36,7 @@ void solve_body(Vector3d &vInf, VectorXd &RHS, MatrixX3d &vSigma, Network &bPan,
     #ifdef ON_UNIX
         bPan.mu = b2bAIC.A.householderQr().solve(RHS);
     #else
-        panDoublet = muAIC.fullPivLu().solve(RHS);
+        bPan.mu = b2bAIC.A.fullPivLu().solve(RHS);
     #endif
 
     //// Control display

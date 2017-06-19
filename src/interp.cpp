@@ -1,5 +1,5 @@
 //// Bilinear interpolation
-// Interpolate linearly a quantity defined in 4 points to another point
+// Interpolate linearly a quantity defined at 4 points to another point
 //
 // Inputs:
 // - x0, x1, x2, x3: x-coordinates of interpolation points

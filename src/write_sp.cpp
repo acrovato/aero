@@ -6,8 +6,8 @@
 // - sRef: reference surface of the full wing
 // - Minf: freestream Mach number
 // - alpha: freestream angle of attack
-// - cL: lift coefficient
 // - bPan: (network of) body panels
+// - cL: lift coefficient
 // - cD: drag coefficient
 
 #include <iostream>

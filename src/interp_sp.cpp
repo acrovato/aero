@@ -1,5 +1,5 @@
 //// Interpolation from panel to sub-panel
-// Interpolate linearly a surface singularities from panel vertices to sub-panel
+// Interpolate linearly surface singularities from panel vertices to sub-panels
 //
 // Inputs:
 // - idP: current panel index

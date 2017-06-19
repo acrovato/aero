@@ -1,5 +1,5 @@
-//// Field to field influence coefficient
-// Compute field source influence coefficient between 2 field panels
+//// Field to field influence coefficient computation
+// Compute field source potential influence coefficient between 2 field panels
 //
 // Reference:
 // Zakir F. Seidov, P.I. Skvirsky (2000), Gravitational potential and energy of homogeneous rectangular parallelepiped,
@@ -10,6 +10,9 @@
 // - xC: x coordinates of influencing field cell vertices
 // - yC: y coordinates of influencing field cell vertices
 // - zC: z coordinates of influencing field cell vertices
+//
+// Output:
+// - coeff: AIC
 
 #include <iostream>
 #include <array>

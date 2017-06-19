@@ -1,4 +1,4 @@
-//// Body to body/field potential influence coefficient
+//// Body to body/field potential influence coefficient computation
 // Compute doublet and source potential influence coefficient between 2 surface panels
 // Katz and Plotkin (2001), Low-Speed Aerodynamics. Program 12
 //

@@ -1,4 +1,4 @@
-//// Create wake panel
+//// Wake panels creation
 // Compute wake panel collocation point, surface, vertices, normal, longitudinal, transverse and perpendicular
 // vectors from data contained into sGrid
 // Wake panels extend to a constant x coordinate, based on the geometry
