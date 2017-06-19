@@ -159,7 +159,6 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subpan
     // TODO 2) Artificial viscosity (pros: works on RG/MG; cons: cut through surface, not physical)
     // TODO NB) With current form, x-upwinding gives same results as s-upwinding.
 
-    // TODO Implement safeguard for when cell is on border on computational domain (especially on y)
     //// Artificial viscosity
     idx = 0;
     for (int j = 0; j < fPan.nY; ++j) {

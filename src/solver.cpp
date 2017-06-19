@@ -118,7 +118,7 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             cout << "FPE global residual at iteration " << itCnt << ": " << log10(fPan.epsilon.norm()) << endl << endl;
             itCnt++;
         } while(log10(deltaSigma.norm()/deltaSigma0) > -numC.RRED);
-        //TODO: Consider using true residual (div(U) - sigma -> 0)
+        //TODO Consider using true residual (div(U) - sigma -> 0). Currently impossible since accuracy.
         cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
         cout << ">>Process converged in " << itCnt << " iteration(s)!<<" << endl;
         cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;

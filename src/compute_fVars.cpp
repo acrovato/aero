@@ -40,6 +40,7 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
     fPan.phi = b2fAIC.B * bPan.tau + b2fAIC.A * bPan.mu + f2fAIC.C * fPan.sigma;
 
     // Perturbation potential (with sub-paneling technique)
+    // TODO Subpaneling induces small assymmetry. Check why?
     for (int jj = 0; jj < sp.sI.size(); jj++) {
         int j = sp.sI[jj]; // panel global index
         int n = j % bPan.nC_; // panel chordwise index
@@ -118,6 +119,7 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
                             fPan.U(idx, 1) = 0;
                     }
                     // Z-derivative
+                    // TODO Add derivative through wake treatment, similar to derivative through surface treatment
                     if (fPan.wMap(idx))
                         fPan.U(idx, 2) = 0;
                     else {
@@ -156,31 +158,6 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
         fPan.U.row(fPan.eIdx(i)) += vInf.transpose();
     }
 
-    // TODO Needs improvement
-    // TODO a) Use same algorithm in wake and field to avoid cutting though surface
-    // TODO b) use cutoff distance between cell and to wake to use (or not) extrapolation between k+1 and k+2 for cell k
-    // Wake treatment
-    //for (int i = 0; i < fPan.nW; ++i) {
-    //    idx = fPan.wIdx(i);
-    //    if (!fPan.wMap(idx-fPan.nX) && !fPan.wMap(idx+fPan.nX)) {
-    //        fPan.U(idx, 0) = 0.5 * (fPan.U(idx - fPan.nX, 0) + fPan.U(idx + fPan.nX, 0));
-    //        fPan.U(idx, 1) = 0.5 * (fPan.U(idx - fPan.nX, 1) + fPan.U(idx + fPan.nX, 1));
-    //        fPan.U(idx, 2) = 0;
-    //    }
-    //    else if (!fPan.wMap(idx-fPan.nX) && fPan.wMap(idx+fPan.nX)) {
-    //        fPan.U(idx, 0) = fPan.U(idx - fPan.nX, 0);
-    //        fPan.U(idx, 1) = fPan.U(idx - fPan.nX, 1);
-    //        fPan.U(idx, 2) = 0;
-    //    }
-    //    else if (fPan.wMap(idx-fPan.nX) && !fPan.wMap(idx+fPan.nX)) {
-    //        fPan.U(idx, 0) = fPan.U(idx + fPan.nX, 0);
-    //        fPan.U(idx, 1) = fPan.U(idx + fPan.nX, 1);
-    //        fPan.U(idx, 2) = 0;
-    //    }
-    //    else
-    //        continue;
-    //}
-
     //// Thermodynamic variables
     for (int i = 0; i < fPan.nE; ++i) {
         idx = fPan.eIdx(i);
@@ -193,5 +170,6 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
         fPan.rho(idx) = pow(
                 1 + (GAMMA - 1) / 2 * Minf * Minf * (1 - fPan.U.row(idx).dot(fPan.U.row(idx))),
                 1 / (GAMMA - 1));
+
     }
 }
