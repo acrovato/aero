@@ -84,7 +84,7 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     create_wake(sGrid, bPan, wPan);
 
     // Create volume grid and cells mapping
-    create_field(box, numC, fPan);
+    create_field(box, fPan);
     map_field(sGrid, numC, bPan, fPan);
 
     //// End preprocessing
