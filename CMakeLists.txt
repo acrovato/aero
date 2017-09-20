@@ -22,6 +22,8 @@ set(SOURCE_FILES src/main.cpp
         src/create_wake.cpp
         src/create_field.cpp
         src/map_field.cpp
+        src/map_derivatives.cpp
+        src/cast_ray_pip.cpp
         src/solver.cpp
         src/id_subpanel.cpp
         src/build_AIC.cpp

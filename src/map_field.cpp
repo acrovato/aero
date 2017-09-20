@@ -24,7 +24,7 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
     double a, b, xL, xL0, zL; // parameters for linear interpolation
     Vector3d fCtr, pt, nrm, v; // field center, panel center, panel normal and fCtr-pt vector
     VectorXd dotPrd, dist; // dot product and distance
-    double minX, maxX, minY, maxY, minZ, maxZ; // minimal bounding box of holding the geometry
+    double minX, maxX, minY, maxY, minZ, maxZ; // minimal bounding box holding the geometry
     int iE = 0, iI = 0, iW = 0; // indexes
     dist.resize(bPan.nP);
     dotPrd.resize(bPan.nP);
@@ -32,7 +32,7 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
     //// Begin
     cout << "Mapping field cells... " << flush;
 
-    // Resize field and network matrices
+    // Resize matrices
     fPan.fMap.resize(fPan.nF);
     fPan.wMap.resize(fPan.nF);
 
@@ -128,7 +128,7 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
         }
     }
 
-    //// Wake map
+    //// Map wake
     fPan.nW = 0;
     // Find cells just above/below the wake
     for (int f = 0; f < fPan.nF; ++f) {

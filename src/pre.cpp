@@ -24,9 +24,10 @@
 #include "read_config.h"
 #include "read_sgrid.h"
 #include "create_panel.h"
+#include "create_wake.h"
 #include "create_field.h"
 #include "map_field.h"
-#include "create_wake.h"
+#include "map_derivatives.h"
 
 using namespace std;
 using namespace Eigen;
@@ -83,9 +84,10 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     create_panel(sGrid, bPan);
     create_wake(sGrid, bPan, wPan);
 
-    // Create volume grid and cells mapping
+    // Create volume grid, map cells and derivatives
     create_field(box, fPan);
     map_field(sGrid, numC, bPan, fPan);
+    map_derivatives(sGrid, numC, bPan, wPan, fPan);
 
     //// End preprocessing
     cout << "****************************" << endl;

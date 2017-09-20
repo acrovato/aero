@@ -28,6 +28,8 @@ struct Field {
     Eigen::VectorXi eIdx, iIdx; // Exterior/Interior cell indices
     Eigen::VectorXi wMap; // Wake map of the field
     Eigen::VectorXi wIdx; // Wake cell indices
+    Eigen::MatrixXd fbdMap; // Field spatial derivatives (body crossing) allowance matrix
+    Eigen::MatrixXd fwdMap; // Field spatial derivatives (wake crossing) allowance matrix
 
 	// Flow
 	Eigen::VectorXd sigma; // Field panel source singularity
