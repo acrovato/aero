@@ -28,8 +28,6 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
 
     //// Initialization
     // Temporary variables
-    int idx; // counter
-    int ost = 0; // cell offset for finite differencing
     MatrixXd vSing; // corner interpolated singularities
     vSing.resize(NV,2);
     MatrixXd sInterp; // sub-panel interoplated singularities
@@ -63,95 +61,41 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
 
     //// Velocity
     // Perturbation velocity
-    idx = 0;
-    for (int j = 0; j < fPan.nY; ++j) {
-        for (int k = 0; k < fPan.nZ; ++k) {
-            for (int i = 0; i < fPan.nX; ++i) {
+    for (int i = 0; i < fPan.nE; i++) {
+        int f = fPan.eIdx(i);
 
-                if (!fPan.fMap(idx)) {
-                    fPan.U(idx, 0) = 0;
-                    fPan.U(idx, 1) = 0;
-                    fPan.U(idx, 2) = 0;
-                }
-                else {
-                    // X-derivative
-                    ost = 1;
-                    if (i == 0) {
-                        if (fPan.fMap(idx + ost))
-                            fPan.U(idx, 0) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaX;
-                        else
-                            fPan.U(idx, 0) = 0;
-                    } else if (i == fPan.nX - 1) {
-                        if (fPan.fMap(idx - ost))
-                            fPan.U(idx, 0) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaX;
-                        else
-                            fPan.U(idx, 0) = 0;
-                    } else {
-                        if (fPan.fMap(idx - ost) && fPan.fMap(idx + ost))
-                            fPan.U(idx, 0) = 0.5 * (fPan.phi(idx + ost) - fPan.phi(idx - ost)) / fPan.deltaX;
-                        else if (fPan.fMap(idx - ost) && !fPan.fMap(idx + ost))
-                            fPan.U(idx, 0) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaX;
-                        else if (!fPan.fMap(idx - ost) && fPan.fMap(idx + ost))
-                            fPan.U(idx, 0) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaX;
-                        else
-                            fPan.U(idx, 0) = 0;
-                    }
-                    // Y-derivative
-                    ost = fPan.nX*fPan.nZ;
-                    if (j == 0) {
-                        if (fPan.fMap(idx + ost))
-                            fPan.U(idx, 1) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaY;
-                        else
-                            fPan.U(idx, 1) = 0;
-                    } else if (j == fPan.nY - 1) {
-                        if (fPan.fMap(idx - ost))
-                            fPan.U(idx, 1) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaY;
-                        else
-                            fPan.U(idx, 1) = 0;
-                    } else {
-                        if (fPan.fMap(idx - ost) && fPan.fMap(idx + ost))
-                            fPan.U(idx, 1) = 0.5 * (fPan.phi(idx + ost) - fPan.phi(idx - ost)) / fPan.deltaY;
-                        else if (fPan.fMap(idx - ost) && !fPan.fMap(idx + ost))
-                            fPan.U(idx, 1) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaY;
-                        else if (!fPan.fMap(idx - ost) && fPan.fMap(idx + ost))
-                            fPan.U(idx, 1) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaY;
-                        else
-                            fPan.U(idx, 1) = 0;
-                    }
-                    // Z-derivative
-                    // TODO Add derivative through wake treatment, similar to derivative through surface treatment
-                    if (fPan.wMap(idx))
-                        fPan.U(idx, 2) = 0;
-                    else {
-                        ost = fPan.nX;
-                        if (k == 0) {
-                            if (fPan.fMap(idx + ost) && !fPan.wMap(idx + ost))
-                                fPan.U(idx, 2) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaZ;
-                            else
-                                fPan.U(idx, 2) = 0;
-                        } else if (k == fPan.nZ - 1) {
-                            if (fPan.fMap(idx - ost) && !fPan.wMap(idx - ost))
-                                fPan.U(idx, 2) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaZ;
-                            else
-                                fPan.U(idx, 2) = 0;
-                        } else {
-                            if ((fPan.fMap(idx - ost) && !fPan.wMap(idx - ost)) &&
-                                (fPan.fMap(idx + ost) && !fPan.wMap(idx + ost)))
-                                fPan.U(idx, 2) = 0.5 * (fPan.phi(idx + ost) - fPan.phi(idx - ost)) / fPan.deltaZ;
-                            else if ((fPan.fMap(idx - ost) && !fPan.wMap(idx - ost)) &&
-                                     (!fPan.fMap(idx + ost) || fPan.wMap(idx + ost)))
-                                fPan.U(idx, 2) = (fPan.phi(idx) - fPan.phi(idx - ost)) / fPan.deltaZ;
-                            else if ((!fPan.fMap(idx - ost) || fPan.wMap(idx - ost)) &&
-                                     (fPan.fMap(idx + ost) && !fPan.wMap(idx + ost)))
-                                fPan.U(idx, 2) = (fPan.phi(idx + ost) - fPan.phi(idx)) / fPan.deltaZ;
-                            else
-                                fPan.U(idx, 2) = 0;
-                        }
-                    }
-                }
-                idx++;
-            }
-        }
+        // X-derivative
+        double fb=0, ff=0;
+        if (fPan.fbdMap(f,0) && fPan.fwdMap(f,0))
+            fb = (fPan.phi(f) - fPan.phi(f - 1)) / fPan.deltaX;
+        if (fPan.fbdMap(f,1) && fPan.fwdMap(f,1))
+            ff = (fPan.phi(f + 1) - fPan.phi(f)) / fPan.deltaX;
+        if (fPan.fbdMap(f,0) && fPan.fwdMap(f,0) && fPan.fbdMap(f,1) && fPan.fwdMap(f,1))
+            fPan.U(f,0) = 0.5*(fb+ff);
+        else
+            fPan.U(f,0) = fb+ff;
+
+        // Y-derivative
+        fb=0; ff=0;
+        if (fPan.fbdMap(f,2) && fPan.fwdMap(f,2))
+            fb = (fPan.phi(f) - fPan.phi(f - fPan.nX*fPan.nZ)) / fPan.deltaY;
+        if (fPan.fbdMap(f,3) && fPan.fwdMap(f,3))
+            ff = (fPan.phi(f + fPan.nX*fPan.nZ) - fPan.phi(f)) / fPan.deltaY;
+        if (fPan.fbdMap(f,2) && fPan.fwdMap(f,2) && fPan.fbdMap(f,3) && fPan.fwdMap(f,3))
+            fPan.U(f,1) = 0.5*(fb+ff);
+        else
+            fPan.U(f,1) = fb+ff;
+
+        // Z-derivative
+        fb=0; ff=0;
+        if (fPan.fbdMap(f,4) && fPan.fwdMap(f,4))
+            fb = (fPan.phi(f) - fPan.phi(f - fPan.nX)) / fPan.deltaZ;
+        if (fPan.fbdMap(f,5) && fPan.fwdMap(f,5))
+            ff = (fPan.phi(f + fPan.nX) - fPan.phi(f)) / fPan.deltaZ;
+        if (fPan.fbdMap(f,4) && fPan.fwdMap(f,4) && fPan.fbdMap(f,5) && fPan.fwdMap(f,5))
+            fPan.U(f,2) = 0.5*(fb+ff);
+        else
+            fPan.U(f,2) = fb+ff;
     }
     // Freestream component
     for (int i = 0; i < fPan.nE; ++i) {
@@ -160,16 +104,15 @@ void compute_fVars(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subp
 
     //// Thermodynamic variables
     for (int i = 0; i < fPan.nE; ++i) {
-        idx = fPan.eIdx(i);
+        int f = fPan.eIdx(i);
         // Speed of sound
-        fPan.a(idx) = sqrt(
-                1/(Minf * Minf) + (GAMMA - 1) / 2 - (GAMMA - 1) / 2 * fPan.U.row(idx).dot(fPan.U.row(idx)));
+        fPan.a(f) = sqrt(
+                1/(Minf * Minf) + (GAMMA - 1) / 2 - (GAMMA - 1) / 2 * fPan.U.row(f).dot(fPan.U.row(f)));
         // Mach number
-        fPan.M(idx) = fPan.U.row(idx).norm() / fPan.a(idx);
+        fPan.M(f) = fPan.U.row(f).norm() / fPan.a(f);
         // Density
-        fPan.rho(idx) = pow(
-                1 + (GAMMA - 1) / 2 * Minf * Minf * (1 - fPan.U.row(idx).dot(fPan.U.row(idx))),
+        fPan.rho(f) = pow(
+                1 + (GAMMA - 1) / 2 * Minf * Minf * (1 - fPan.U.row(f).dot(fPan.U.row(f))),
                 1 / (GAMMA - 1));
-
     }
 }

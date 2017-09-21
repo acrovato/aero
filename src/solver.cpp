@@ -67,7 +67,7 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     fPan.dRho = MatrixX3d::Zero(fPan.nF, NDIM);
     fPan.a = VectorXd::Zero(fPan.nF);
     // Numerics
-    fPan.epsilon.resize(fPan.nF);
+    fPan.epsilon = VectorXd::Zero(fPan.nF);
 
 
     // Temporary variables

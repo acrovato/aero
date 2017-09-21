@@ -21,11 +21,11 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
 
     // Temporary variables
     int idx = 0, idx0 = 0, idx1 = 0; // counters
-    double a, b, xL, xL0, zL; // parameters for linear interpolation
+    double a, b, xL, xL0; // parameters for linear interpolation
     Vector3d fCtr, pt, nrm, v; // field center, panel center, panel normal and fCtr-pt vector
     VectorXd dotPrd, dist; // dot product and distance
     double minX, maxX, minY, maxY, minZ, maxZ; // minimal bounding box holding the geometry
-    int iE = 0, iI = 0, iW = 0; // indexes
+    int iE = 0, iI = 0; // indexes
     dist.resize(bPan.nP);
     dotPrd.resize(bPan.nP);
 
@@ -34,7 +34,6 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
 
     // Resize matrices
     fPan.fMap.resize(fPan.nF);
-    fPan.wMap.resize(fPan.nF);
 
     // Compute minimum size box including full geometry
     minX = sGrid.col(0).minCoeff() - numC.TOLB;
@@ -128,58 +127,6 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
         }
     }
 
-    //// Map wake
-    fPan.nW = 0;
-    // Find cells just above/below the wake
-    for (int f = 0; f < fPan.nF; ++f) {
-        if (fPan.CG(f,0) > minX && fPan.CG(f,1) > minY && fPan.CG(f,1) < maxY) {
-            for (int p = 0; p < bPan.nS_; ++p) {
-                idx0 = p * bPan.nC;
-                idx1 = (p + 1) * bPan.nC;
-                if (fPan.CG(f,1) < sGrid(idx1,1)) {
-                    a = (sGrid(idx1,0) - sGrid(idx0,0)) / (sGrid(idx1,1) - sGrid(idx0,1));
-                    b = sGrid(idx0,0) - a*sGrid(idx0,1);
-                    xL = a * fPan.CG(f,1) + b;
-                    a = (sGrid(idx1,2) - sGrid(idx0,2)) / (sGrid(idx1,1) - sGrid(idx0,1));
-                    b = sGrid(idx0,2) - a*sGrid(idx0,1);
-                    zL = a * fPan.CG(f,1) + b;
-                    if (fPan.CG(f,0) > xL) {
-                        if (abs(fPan.CG(f,2) - zL) < 0.99*fPan.deltaZ) {
-                            fPan.wMap(f) = 1;
-                            fPan.nW++;
-                            break;
-                        }
-                        else {
-                            fPan.wMap(f) = 0;
-                            break;
-                        }
-                    }
-                    else {
-                        fPan.wMap(f) = 0;
-                        break;
-                    }
-                }
-                else
-                    continue;
-            }
-        }
-        else {
-            fPan.wMap(f) = 0;
-            continue;
-        }
-    }
-
-    // Find cell indices according to wake type
-    fPan.wIdx.resize(fPan.nW);
-    for (int f = 0; f < fPan.nF; ++f) {
-        if (fPan.wMap(f)) {
-            fPan.wIdx(iW) = f;
-            iW++;
-        }
-        else
-            continue;
-    }
-
     //// Control display
     cout << "Done!" << endl;
     cout << "Field map: " << fPan.fMap.size() << endl;
@@ -194,15 +141,5 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
     //cout << endl;
     cout << "Exterior cells: " << fPan.eIdx.rows() << endl;
     cout << "Interior cells: " << fPan.iIdx.rows() << endl;
-    cout << "Wake map: " << fPan.wMap.size() << endl;
-    //for (int j = 0; j < fPan.nY; ++j) {
-    //    cout << endl;
-    //    for (int k = 0; k < fPan.nZ; ++k) {
-    //        cout << endl;
-    //        for (int i = 0; i < fPan.nX; ++i)
-    //            cout << fPan.wMap(i + k * fPan.nX + j * fPan.nX * fPan.nZ) << ' ';
-    //    }
-    //}
-    cout << "Wake cells: " << fPan.wIdx.rows() << endl;
     cout << endl;
 }

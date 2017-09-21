@@ -23,11 +23,8 @@ struct Field {
     double deltaX, deltaY, deltaZ; // Cell X, Y, Z and minigrid size
     int nE = 0; // Number of external field cells
 	int nI = 0; // Number of internal field cells
-	int nW = 0; // Number of field cells in the wake
     Eigen::VectorXi fMap; // Exterior/Interior map of the field
     Eigen::VectorXi eIdx, iIdx; // Exterior/Interior cell indices
-    Eigen::VectorXi wMap; // Wake map of the field
-    Eigen::VectorXi wIdx; // Wake cell indices
     Eigen::MatrixXd fbdMap; // Field spatial derivatives (body crossing) allowance matrix
     Eigen::MatrixXd fwdMap; // Field spatial derivatives (wake crossing) allowance matrix
 

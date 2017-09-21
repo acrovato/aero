@@ -73,22 +73,22 @@ int cast_ray_pip(double u0, double u1, double u2, double w0, double w1, double w
     a = v0 - i;
     b = v3 - i;
     // If (a X b) vector has not the same orientation as panel normal, then angle is between PI and 2PI
-    if ((a.cross(b)).dot(n) < 0)
+    if ((a.cross(b)).dot(n) < -TOL)
         return 1;
     // Vectors from intersection to vertices 4-3
     a = v3 - i;
     b = v2 - i;
-    if ((a.cross(b)).dot(n) < 0)
+    if ((a.cross(b)).dot(n) < -TOL)
         return 1;
     // Vectors from intersection to vertices 3-2
     a = v2 - i;
     b = v1 - i;
-    if ((a.cross(b)).dot(n) < 0)
+    if ((a.cross(b)).dot(n) < -TOL)
         return 1;
     // Vectors from intersection to vertices 2-1
     a = v1 - i;
     b = v0 - i;
-    if ((a.cross(b)).dot(n) < 0)
+    if ((a.cross(b)).dot(n) < -TOL)
         return 1;
 
     // If program ran till there, then derivative intersects the panel and must be prevented!

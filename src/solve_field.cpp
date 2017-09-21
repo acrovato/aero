@@ -26,11 +26,6 @@ using  namespace Eigen;
 void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subpanel &sp,
                  Body_AIC &b2fAIC, Field2field_AIC &f2fAIC, Subpanel_AIC &spAIC) {
 
-    int idx; // counter
-    int ost = 0; // cell offset for finite differencing
-    double mu, deltaSigmaX, deltaSigmaY, deltaSigmaZ; // Variables for artificial viscosity
-    double dU, dV, dW; // Variables for residual
-
     //// Begin
     cout << "Computing field variables... " << flush;
 
@@ -39,120 +34,71 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subpan
 
     //// Field sources
     // Density gradient
-    idx = 0;
-    for (int j = 0; j < fPan.nY; ++j) {
-        for (int k = 0; k < fPan.nZ; ++k) {
-            for (int i = 0; i < fPan.nX; ++i) {
+    for (int i = 0; i < fPan.nE; i++) {
+        int f = fPan.eIdx(i);
+        double dU, dV, dW; // Variables for residual
 
-                if (!fPan.fMap(idx)) {
-                    fPan.dRho(idx, 0) = 0;
-                    fPan.dRho(idx, 1) = 0;
-                    fPan.dRho(idx, 2) = 0;
-                    dU = 0;
-                    dV = 0;
-                    dW = 0;
-                    fPan.sigma(idx) = 0;
-                    fPan.epsilon(idx) = 0;
-                }
-                else {
-                    // X-derivative
-                    ost = 1;
-                    if (i == 0) {
-                        if (fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 0) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaX;
-                            dU = (fPan.U(idx + ost, 0) - fPan.U(idx, 0)) / fPan.deltaX;}
-                        else {
-                            fPan.dRho(idx, 0) = 0;
-                            dU = 0; }
-                    } else if (i == fPan.nX - 1) {
-                        if (fPan.fMap(idx - ost)) {
-                            fPan.dRho(idx, 0) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaX;
-                            dU = (fPan.U(idx, 0) - fPan.U(idx - ost, 0)) / fPan.deltaX;}
-                        else {
-                            fPan.dRho(idx, 0) = 0;
-                            dU = 0;}
-                    } else {
-                        if (fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 0) = 0.5 * (fPan.rho(idx + ost) - fPan.rho(idx - ost)) / fPan.deltaX;
-                            dU = 0.5 * (fPan.U(idx + ost,0) - fPan.U(idx - ost,0)) / fPan.deltaX;}
-                        else if (fPan.fMap(idx - ost) && !fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 0) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaX;
-                            dU = (fPan.U(idx,0) - fPan.U(idx - ost,0)) / fPan.deltaX;}
-                        else if (!fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 0) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaX;
-                            dU = (fPan.U(idx + ost,0) - fPan.U(idx,0)) / fPan.deltaX;}
-                        else {
-                            fPan.dRho(idx, 0) = 0;
-                            dU = 0;}
-                    }
-                    // Y-derivative
-                    ost = fPan.nX*fPan.nZ;
-                    if (j == 0) {
-                        if (fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 1) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaY;
-                            dV = (fPan.U(idx + ost,1) - fPan.U(idx,1)) / fPan.deltaY;}
-                        else {
-                            fPan.dRho(idx, 1) = 0;
-                            dV = 0;}
-                    } else if (j == fPan.nY - 1) {
-                        if (fPan.fMap(idx - ost)) {
-                            fPan.dRho(idx, 1) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaY;
-                            dV = (fPan.U(idx,1) - fPan.U(idx - ost,1)) / fPan.deltaY;}
-                        else {
-                            fPan.dRho(idx, 1) = 0;
-                            dV = 0;}
-                    } else {
-                        if (fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 1) = 0.5 * (fPan.rho(idx + ost) - fPan.rho(idx - ost)) / fPan.deltaY;
-                            dV = 0.5 * (fPan.U(idx + ost,1) - fPan.U(idx - ost,1)) / fPan.deltaY;}
-                        else if (fPan.fMap(idx - ost) && !fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 1) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaY;
-                            dV = (fPan.U(idx,1) - fPan.U(idx - ost,1)) / fPan.deltaY;}
-                        else if (!fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 1) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaY;
-                            dV = (fPan.U(idx + ost,1) - fPan.U(idx,1)) / fPan.deltaY;}
-                        else {
-                            fPan.dRho(idx, 1) = 0;
-                            dV = 0;}
-                    }
-                    // Z-derivative
-                    ost = fPan.nX;
-                    if (k == 0) {
-                        if (fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 2) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaZ;
-                            dW = (fPan.U(idx + ost,2) - fPan.U(idx,2)) / fPan.deltaZ;}
-                        else {
-                            fPan.dRho(idx, 2) = 0;
-                            dW = 0;}
-                    } else if (k == fPan.nZ - 1) {
-                        if (fPan.fMap(idx - ost)) {
-                            fPan.dRho(idx, 2) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaZ;
-                            dW = (fPan.U(idx,2) - fPan.U(idx - ost,2)) / fPan.deltaZ;}
-                        else {
-                            fPan.dRho(idx, 2) = 0;
-                            dW = 0;}
-                    } else {
-                        if (fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 2) = 0.5 * (fPan.rho(idx + ost) - fPan.rho(idx - ost)) / fPan.deltaZ;
-                            dW = 0.5 * (fPan.U(idx + ost,2) - fPan.U(idx - ost,2)) / fPan.deltaZ;}
-                        else if (fPan.fMap(idx - ost) && !fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 2) = (fPan.rho(idx) - fPan.rho(idx - ost)) / fPan.deltaZ;
-                            dW = (fPan.U(idx,2) - fPan.U(idx - ost,2)) / fPan.deltaZ;}
-                        else if (!fPan.fMap(idx - ost) && fPan.fMap(idx + ost)) {
-                            fPan.dRho(idx, 2) = (fPan.rho(idx + ost) - fPan.rho(idx)) / fPan.deltaZ;
-                            dW = (fPan.U(idx + ost,2) - fPan.U(idx,2)) / fPan.deltaZ;}
-                        else {
-                            fPan.dRho(idx, 2) = 0;
-                            dW = 0;}
-                    }
-                    // Field source
-                    fPan.sigma(idx) = -1 / (fPan.rho(idx)) * fPan.U.row(idx).dot(fPan.dRho.row(idx));
-                    // Residual
-                    fPan.epsilon(idx) = dU + dV + dW - fPan.sigma(idx);
-                }
-                idx++;
-            }
+        // X-derivative
+        double fb=0, ff=0, fb2=0, ff2=0;
+        if (fPan.fbdMap(f,0)) {
+            fb = (fPan.rho(f) - fPan.rho(f - 1)) / fPan.deltaX;
+            fb2 = (fPan.U(f,0) - fPan.U(f - 1,0)) / fPan.deltaX;
         }
+        if (fPan.fbdMap(f,1)) {
+            ff = (fPan.rho(f + 1) - fPan.rho(f)) / fPan.deltaX;
+            ff2 = (fPan.U(f + 1,0) - fPan.U(f,0)) / fPan.deltaX;
+        }
+        if (fPan.fbdMap(f,0) && fPan.fbdMap(f,1)) {
+            fPan.dRho(f,0) = 0.5*(fb+ff);
+            dU = 0.5*(fb2+ff2);
+        }
+        else {
+            fPan.dRho(f,0) = fb+ff;
+            dU = fb2+ff2;
+        }
+
+        // Y-derivative
+        fb=0, ff=0, fb2=0, ff2=0;
+        if (fPan.fbdMap(f,2)) {
+            fb = (fPan.rho(f) - fPan.rho(f - fPan.nX*fPan.nZ)) / fPan.deltaY;
+            fb2 = (fPan.U(f,1) - fPan.U(f - fPan.nX*fPan.nZ,1)) / fPan.deltaY;
+        }
+        if (fPan.fbdMap(f,3)) {
+            ff = (fPan.rho(f + fPan.nX*fPan.nZ) - fPan.rho(f)) / fPan.deltaY;
+            ff2 = (fPan.U(f + fPan.nX*fPan.nZ,1) - fPan.U(f,1)) / fPan.deltaY;
+        }
+        if (fPan.fbdMap(f,2) && fPan.fbdMap(f,3)) {
+            fPan.dRho(f,1) = 0.5*(fb+ff);
+            dV = 0.5*(fb2+ff2);
+        }
+        else {
+            fPan.dRho(f,1) = fb+ff;
+            dV = fb2+ff2;
+        }
+
+        // Z-derivative
+        fb=0, ff=0, fb2=0, ff2=0;
+        if (fPan.fbdMap(f,4)) {
+            fb = (fPan.rho(f) - fPan.rho(f - fPan.nX)) / fPan.deltaZ;
+            fb2 = (fPan.U(f,2) - fPan.U(f - fPan.nX,2)) / fPan.deltaZ;
+        }
+        if (fPan.fbdMap(f,5)) {
+            ff = (fPan.rho(f + fPan.nX) - fPan.rho(f)) / fPan.deltaZ;
+            ff2 = (fPan.U(f + fPan.nX,2) - fPan.U(f,2)) / fPan.deltaZ;
+        }
+        if (fPan.fbdMap(f,4) && fPan.fbdMap(f,5)) {
+            fPan.dRho(f,2) = 0.5*(fb+ff);
+            dW = 0.5*(fb2+ff2);
+        }
+        else {
+            fPan.dRho(f,2) = fb+ff;
+            dW = fb2+ff2;
+        }
+
+        // Field source
+        fPan.sigma(f) = -1 / (fPan.rho(f)) * fPan.U.row(f).dot(fPan.dRho.row(f));
+        // Residual
+        fPan.epsilon(f) = dU + dV + dW - fPan.sigma(f);
     }
 
     // TODO 1) Artificial density (pros: physical; cons: does not work on MG or RG/MG)
@@ -160,44 +106,37 @@ void solve_field(double Minf, Vector3d &vInf, Network &bPan, Field &fPan, Subpan
     // TODO NB) With current form, x-upwinding gives same results as s-upwinding.
 
     //// Artificial viscosity
-    idx = 0;
-    for (int j = 0; j < fPan.nY; ++j) {
-        for (int k = 0; k < fPan.nZ; ++k) {
-            for (int i = 0; i < fPan.nX; ++i) {
+    for (int i = 0; i < fPan.nE; i++) {
+        int f = fPan.eIdx(i);
+        double mu, deltaSigmaX, deltaSigmaY, deltaSigmaZ; // Variables for artificial viscosity
 
-                if (fPan.fMap(idx) && fPan.M(idx) > M_C) {
-                    mu = CMU * (1 - M_C * M_C / (fPan.M(idx) * fPan.M(idx)));
+        if (fPan.M(f) > M_C) {
+            mu = CMU * (1 - M_C * M_C / (fPan.M(f) * fPan.M(f)));
 
-                    // X-contribution
-                    ost = 1;
-                    if (fPan.U(idx, 0) > 0 && fPan.fMap(idx - ost) && i != 0)
-                        deltaSigmaX = fPan.sigma(idx) - fPan.sigma(idx - ost);
-                    else if (fPan.U(idx, 0) < 0 && fPan.fMap(idx + ost) && i != fPan.nX-1)
-                        deltaSigmaX = fPan.sigma(idx + ost) - fPan.sigma(idx);
-                    else
-                        deltaSigmaX = 0;
-                    // Y-contribution
-                    ost = fPan.nX*fPan.nZ;
-                    if (fPan.U(idx, 1) > 0 && fPan.fMap(idx - ost) && j != 0)
-                        deltaSigmaY = fPan.sigma(idx) - fPan.sigma(idx - ost);
-                    else if (fPan.U(idx, 1) < 0 && fPan.fMap(idx + ost) && j != fPan.nY-1)
-                        deltaSigmaY = fPan.sigma(idx + ost) - fPan.sigma(idx);
-                    else
-                        deltaSigmaY = 0;
-                    // Z-contribution
-                    ost = fPan.nX;
-                    if (fPan.U(idx, 2) > 0 && fPan.fMap(idx - ost) && k != 0)
-                        deltaSigmaZ = fPan.sigma(idx) - fPan.sigma(idx - ost);
-                    else if (fPan.U(idx, 2) < 0 && fPan.fMap(idx + ost) && k != fPan.nZ-1)
-                        deltaSigmaZ = fPan.sigma(idx + ost) - fPan.sigma(idx);
-                    else
-                        deltaSigmaZ = 0;
+            // X-contribution
+            if (fPan.U(f,0) > 0 && fPan.fbdMap(f,0))
+                deltaSigmaX = fPan.sigma(f) - fPan.sigma(f - 1);
+            else if (fPan.U(f,0) < 0 && fPan.fbdMap(f,1))
+                deltaSigmaX = fPan.sigma(f + 1) - fPan.sigma(f);
+            else
+                deltaSigmaX = 0;
+            // Y-contribution
+            if (fPan.U(f,1) > 0 && fPan.fbdMap(f,2))
+                deltaSigmaY = fPan.sigma(f) - fPan.sigma(f - fPan.nX*fPan.nZ);
+            else if (fPan.U(f,1) < 0 && fPan.fbdMap(f,3))
+                deltaSigmaY = fPan.sigma(f + fPan.nX*fPan.nZ) - fPan.sigma(f);
+            else
+                deltaSigmaY = 0;
+            // Z-contribution
+            if (fPan.U(f,2) > 0 && fPan.fbdMap(f,4))
+                deltaSigmaZ = fPan.sigma(f) - fPan.sigma(f - fPan.nX);
+            else if (fPan.U(f,2) < 0 && fPan.fbdMap(f,5))
+                deltaSigmaZ = fPan.sigma(f + fPan.nX) - fPan.sigma(f);
+            else
+                deltaSigmaZ = 0;
 
-                    fPan.sigma(idx) -= mu / fPan.U.row(idx).norm() *
-                                       (fPan.U(idx, 0) * deltaSigmaX + fPan.U(idx, 1) * deltaSigmaY + fPan.U(idx, 2) * deltaSigmaZ);
-                }
-                idx ++;
-            }
+            fPan.sigma(f) -= mu / fPan.U.row(f).norm() *
+                               (fPan.U(f, 0) * deltaSigmaX + fPan.U(f, 1) * deltaSigmaY + fPan.U(f, 2) * deltaSigmaZ);
         }
     }
 
