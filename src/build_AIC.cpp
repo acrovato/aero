@@ -132,7 +132,7 @@ void build_AIC(bool symY, Network &bPan, Network &wPan, Field &fPan,
         }
     }
 
-    // TODO check panel vectors symmetry for complex wings
+    // TODO check for complex wings -> tested on NASASC0712 (sweep, taper, twist & dihedral) with symY=0 & 1 - same cp
     // Panel symmetry
     if (symY) {
         for (int j = 0; j < bPan.nP; ++j) {

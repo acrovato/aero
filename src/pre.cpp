@@ -37,7 +37,7 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
 
     //// Initialization
     // Temporary arrays to store grid information
-    array<array<double, 3>, 8> box; // Corner points defining domain
+    array<array<double, 3>, 8> box{}; // Corner points defining domain
     MatrixX3d sGrid ; // Surface grid corner points
 
     // Path definition

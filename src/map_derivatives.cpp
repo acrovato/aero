@@ -71,6 +71,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                         fPan.fbdMap(f, 0) = 1;
                         fPan.fwdMap(f, 0) = 1;
                     }
+                    // Check if previous cell is not an internal cell
+                    else if (!fPan.fMap(f-1)) {
+                        fPan.fbdMap(f, 0) = 0;
+                        fPan.fwdMap(f, 0) = 0;
+                    }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
                         u = fPan.CG.row(f-1).transpose() - fPan.CG.row(f).transpose();
@@ -112,6 +117,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                              || (fPan.CG(f,2) < minZ || fPan.CG(f,2) > maxZ)) {
                         fPan.fbdMap(f, 1) = 1;
                         fPan.fwdMap(f, 1) = 1;
+                    }
+                    // Check if next cell is not an internal cell
+                    else if (!fPan.fMap(f+1)) {
+                        fPan.fbdMap(f, 1) = 0;
+                        fPan.fwdMap(f, 1) = 0;
                     }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
@@ -155,6 +165,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                         fPan.fbdMap(f, 2) = 1;
                         fPan.fwdMap(f, 2) = 1;
                     }
+                    // Check if previous cell is not an internal cell
+                    else if (!fPan.fMap(f-fPan.nX*fPan.nZ)) {
+                        fPan.fbdMap(f, 2) = 0;
+                        fPan.fwdMap(f, 2) = 0;
+                    }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
                         u = fPan.CG.row(f-fPan.nX*fPan.nZ).transpose() - fPan.CG.row(f).transpose();
@@ -196,6 +211,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                              || (fPan.CG(f,2) < minZ || fPan.CG(f,2) > maxZ)) {
                         fPan.fbdMap(f, 3) = 1;
                         fPan.fwdMap(f, 3) = 1;
+                    }
+                    // Check if next cell is not an internal cell
+                    else if (!fPan.fMap(f+fPan.nX*fPan.nZ)) {
+                        fPan.fbdMap(f, 3) = 0;
+                        fPan.fwdMap(f, 3) = 0;
                     }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
@@ -239,6 +259,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                         fPan.fbdMap(f, 4) = 1;
                         fPan.fwdMap(f, 4) = 1;
                     }
+                    // Check if previous cell is not an internal cell
+                    else if (!fPan.fMap(f-fPan.nX)) {
+                        fPan.fbdMap(f, 4) = 0;
+                        fPan.fwdMap(f, 4) = 0;
+                    }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
                         u = fPan.CG.row(f-fPan.nX).transpose() - fPan.CG.row(f).transpose();
@@ -280,6 +305,11 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
                              || ((fPan.CG(f,2)+fPan.deltaZ) < minZ || fPan.CG(f,2) > maxZ)) {
                         fPan.fbdMap(f, 5) = 1;
                         fPan.fwdMap(f, 5) = 1;
+                    }
+                    // Check if next cell is not an internal cell
+                    else if (!fPan.fMap(f+fPan.nX)) {
+                        fPan.fbdMap(f, 5) = 0;
+                        fPan.fwdMap(f, 5) = 0;
                     }
                     // Create a vector joining the center of two adjacent cells and check if that vector crosses a panel
                     else {
