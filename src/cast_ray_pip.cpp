@@ -1,5 +1,10 @@
 //// Ray casting and Point In Polygon test
-// Check that a spatial derivative between two cells does not cross a given (body or wake) panel
+// Check that a given vector does not cross a given (body or wake) panel
+//
+// References:
+// http://geomalgorithms.com/a05-_intersect-1.html
+// http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
+// https://stackoverflow.com/questions/5188561/signed-angle-between-two-3d-vectors-with-same-origin-within-the-same-plane
 //
 // Inputs:
 // - u0, u1, u2: vector joining center of reference cell to center of adjacent cell
@@ -12,12 +17,7 @@
 // - v30, v31, v32: panel vertex 4 coordinates
 //
 // Output:
-// - 0 (derivative must be prevented) OR 1 (derivative is allowed)
-//
-// References:
-// http://geomalgorithms.com/a05-_intersect-1.html
-// http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
-// https://stackoverflow.com/questions/5188561/signed-angle-between-two-3d-vectors-with-same-origin-within-the-same-plane
+// - 0 (vector crosses the panel) OR 1 (vector does not cross the panel)
 
 #include <iostream>
 #include <Eigen/Dense>

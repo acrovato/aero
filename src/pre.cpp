@@ -58,7 +58,7 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     cin >> configParamName;
     configParamPath = "../IO/" + configParamName + ".cfg";
     #ifdef ON_UNIX
-        configParamPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.cfg";
+        configParamPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/M6.cfg";
     #else
         configParamPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.cfg";
     #endif
@@ -66,7 +66,7 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     cin >> surfGridName;
     surfGridPath = "../IO/" +surfGridName + ".pts";
     #ifdef ON_UNIX
-        surfGridPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/N12.pts";
+        surfGridPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/M6.pts";
     #else
         surfGridPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.pts";
     #endif
