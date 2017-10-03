@@ -87,9 +87,6 @@ void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, dou
                 if (name == "boxTol") {
                     numC.TOLB = numValue;
                 }
-                else if (name == "singTol") {
-                    numC.TOLS = numValue;
-                }
                 else if (name == "resRed") {
                     numC.RRED = numValue;
                     secFLAG = 1;
@@ -229,7 +226,6 @@ void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, dou
     cout << "Done reading config file!" << endl;
     cout << "XZ symmetry: " << symY << endl;
     cout << "Tolerance on box: " << numC.TOLB << endl;
-    cout << "Tolerance on singularity: " << numC.TOLS << endl;
     cout << "Order of magnitude of residual reduction: " << numC.RRED << endl;
     cout << "Reference surface: " << sRef << endl;
     cout << "Mach number: " << machInf << endl;
