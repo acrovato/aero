@@ -1,14 +1,26 @@
 cmake_minimum_required(VERSION 3.6)
 project(FPMv1)
 
+# Check OS
 #IF(UNIX AND NOT APPLE)
 #IF(WIN32)
 IF(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
 ENDIF()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# Check for C++11
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else()
+        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
+# Set path for header and source files
 IF (UNIX)
     include_directories(include)
 ELSEIF(WIN32)
@@ -42,6 +54,15 @@ set(SOURCE_FILES src/main.cpp
         src/write_sp.cpp
         src/write_fv.cpp)
 
+# Specifiy default build type
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE Release CACHE STRING
+       "Choose the type of build, options are: None Debug Release RelWithDebInfo
+MinSizeRel."
+       FORCE )
+endif()
+
+# Set Release or Debug option
 IF(CMAKE_CXX_FLAGS_RELEASE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCMAKE_CXX_FLAGS=-O3")
     add_executable(celia ${SOURCE_FILES})
