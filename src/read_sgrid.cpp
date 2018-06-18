@@ -32,6 +32,8 @@ void read_sgrid(string path, MatrixX3d &sGrid, Network &bPan){
         cout << "File not found: " << path << endl;
         exit(EXIT_FAILURE);
     }
+    else
+        cout << "Found grid file: " << path << endl;
 
     getline(infile, line);
     cout << "Reading file... '" << line << "'" << endl;

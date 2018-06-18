@@ -3,6 +3,7 @@
 // Store information into relevant structures
 //
 // Inputs:
+// - arvg: command line argument provided to main (contains path to config and grid files)
 // - numC: list of numerical parameters (structure)
 // - symY: defines symmetry about Y axis
 // - sRef: reference surface of the full wing
@@ -32,7 +33,7 @@
 using namespace std;
 using namespace Eigen;
 
-int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
+int pre(char *argv[], Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &AoA, Vector3d &vInf,
         Network &bPan, Network &wPan, Field &fPan, Subpanel &sp) {
 
     //// Initialization
@@ -41,35 +42,14 @@ int pre(Numerical_CST &numC, bool &symY, double &sRef, double &machInf, double &
     MatrixX3d sGrid ; // Surface grid corner points
 
     // Path definition
-    string configParamName;
-    string configParamPath;
-    string surfGridName;
-    string surfGridPath;
+    string configParamPath = argv[1];
+    string surfGridPath = argv[2];
 
     //// Begin preprocessing
     cout << "*****************************" << endl;
     cout << "*Beginning pre-processing...*" << endl;
     cout << "*****************************" << endl;
-    cout << "Files should be located in: /IO/" << endl;
     cout << endl;
-
-    // Paths
-    cout << "Enter input parameters file name:" << endl;
-    cin >> configParamName;
-    configParamPath = "../IO/" + configParamName + ".cfg";
-    #ifdef ON_UNIX
-        configParamPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/M6.cfg";
-    #else
-        configParamPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.cfg";
-    #endif
-    cout << "Enter input surface grid file name:" << endl;
-    cin >> surfGridName;
-    surfGridPath = "../IO/" +surfGridName + ".pts";
-    #ifdef ON_UNIX
-        surfGridPath = "/Users/workAC/Documents/Adrien/PhD/Codes/C++/FPMv1/IO/M6.pts";
-    #else
-        surfGridPath = "C:/Adrien/Work/PhD/Thesis/Codes/C++/FPMv1/IO/N12.pts";
-    #endif
 
     // Read config and grid from files
     read_config(configParamPath, numC, symY, sRef, machInf, AoA, box, fPan, sp);

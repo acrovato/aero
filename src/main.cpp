@@ -49,7 +49,7 @@
 using namespace std;
 using namespace Eigen;
 
-int main() {
+int main( int argc, char *argv[] ) {
 
     //// Variable definition
 	// Geometry
@@ -85,15 +85,22 @@ int main() {
     cout << "** (  |__|__|| |__ | | / /\\ \\   **" << endl;
     cout << "**  \\____|__ |____||_|/_/¯¯\\_\\  **" << endl;
     cout << "**********************************" << endl << endl;
-    cout << "Hi! My name is CeLiA v1.0-1704" << endl;
+    cout << "Hi! My name is CeLiA v1.0-1806" << endl;
     cout << "Solver started on " << localNow << endl;
+
+    // Check parameters
+    if (argc != 3) {
+        cout << "Incorrect number of parameters provided!" << endl;
+        cout << "Usage: ./celia <pathToConfigFile(.cfg)> <pathToGridgridFile(.pts)>." << endl;
+        return 1;
+    }
 
     // Set time counter
     clock_t start = clock();
     clock_t startS = clock();
 
     // Pre-processing
-    pre(numC, symY, sRef, Minf, alpha, vInf, bPan, wPan, fPan, sp);
+    pre(argv, numC, symY, sRef, Minf, alpha, vInf, bPan, wPan, fPan, sp);
     clock_t endS = clock();
     cout << "Preprocessing time: " << (endS - startS) / (double) CLOCKS_PER_SEC << "s" << endl << endl;
 

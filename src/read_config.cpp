@@ -49,6 +49,8 @@ void read_config(string path, Numerical_CST &numC, bool &symY, double &sRef, dou
         cout << "File not found: " << path << endl;
         exit(EXIT_FAILURE);
     }
+    else
+        cout << "Found config file: " << path << endl;
 
     getline(infile, line);
     cout << "Reading file... '" << line << "'"<< endl;
