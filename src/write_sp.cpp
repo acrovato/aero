@@ -1,5 +1,5 @@
 //// Surface pressure writing
-// Write panel pressure surface in external .dat file
+// Write panel pressure surface in external .dat and .pos files
 //
 // I/O:
 // - outPath: path to write file
@@ -23,16 +23,12 @@ using namespace Eigen;
 
 void write_sp(string outPath, double sRef, double alpha, double Minf, Network &bPan, double cL, double cD) {
 
-    //// Begin
-    cout << "Writing surface pressure file in 'sp.dat'... ";
-
-    // Temporary variables
+    //// Write to .dat file
+    cout << "Writing surface pressure file in 'sp.dat'... " << flush;
+    string outPathDat = outPath + "sp.dat";
     int idx = 0;
-    outPath += "sp.dat";
-
-    //// Write to file
     ofstream sp;
-    sp.open (outPath);
+    sp.open(outPathDat);
 
     // General information (header)
     sp << "Surface pressure file" << endl << endl;
@@ -59,6 +55,42 @@ void write_sp(string outPath, double sRef, double alpha, double Minf, Network &b
         }
         sp << endl;
     }
+
+    // Close file
+    sp.close();
+    cout << "Done!" << endl;
+
+    //// Write to gmsh .pos file
+    cout << "Writing surface pressure file in 'Cp.pos'... " << flush;
+    string outPathPos = outPath + "Cp.pos";
+    idx = 0;
+    sp.open(outPathPos);
+
+    // Gmsh header
+    sp << "View \"Cp\" {" << endl;
+
+    // Panel pressure coefficient
+    for (int j = 0; j < bPan.nS_; ++j) {
+        for (int i = 0; i < bPan.nC_; ++i) {
+            sp << "SQ(";
+            for (int k = 0; k < 3; ++k)
+                sp << bPan.v0(idx,k) << ",";
+            for (int k = 0; k < 3; ++k)
+                sp << bPan.v1(idx,k) << ",";
+            for (int k = 0; k < 3; ++k)
+                sp << bPan.v2(idx,k) << ",";
+            for (int k = 0; k < 2; ++k)
+                sp << bPan.v3(idx,k) << ",";
+            sp << bPan.v3(idx,2) << "){";
+            for (int k = 0; k < 3; ++k)
+                sp << bPan.cP(idx) << ",";
+            sp << bPan.cP(idx) << "};" << endl;
+            idx++;
+        }
+    }
+
+    // Gmsh footer
+    sp << "};" << endl << endl;
 
     // Close file
     sp.close();

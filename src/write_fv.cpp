@@ -1,5 +1,5 @@
 //// Field variables writing
-// Write field variable in external .dat file
+// Write field variable in external .dat and .pos files
 //
 // I/O:
 // - outPath: path to write file
@@ -18,15 +18,11 @@ using namespace Eigen;
 
 void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
 
-    //// Begin
-    cout << "Writing field variables file in 'fv.dat'... ";
-
-    // Set path
-    outPath += "fv.dat";
-
-    //// Write to file
+    //// Write to .dat file
+    cout << "Writing field variables file in 'fv.dat'... " << flush;
+    string outPathDat = outPath + "fv.dat";
     ofstream fv;
-    fv.open (outPath);
+    fv.open(outPathDat);
 
     // General information (header)
     fv << "Field variables file" << endl << endl;
@@ -67,4 +63,35 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
     // Close file
     fv.close();
     cout << "Done!" << endl << endl;
+
+    //// Write to gmsh .pos file
+    cout << "Writing field variables file in 'M.pos'... " << flush;
+    string outPathPos = outPath + "M.pos";
+    fv.open(outPathPos);
+
+    // Gmsh header
+    fv << "View \"M\" {" << endl;
+
+    // Mach number
+    for (int f = 0; f < fPan.nF; ++f) {
+        fv << "SH(";
+        for (int i = 0; i < 1; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                for (int k = 0; k < 2; ++k) {
+                    fv << fPan.vX(f,i) << "," << fPan.vY(f,j) << "," << fPan.vZ(f,k) << ',';
+                }
+            }
+        }
+        fv << fPan.vX(f,1) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,1) << "}(";
+        for (int i = 0; i < 7; ++i)
+            fv << fPan.M(f) << ",";
+        fv << fPan.M(f) << ");" << endl;
+    }
+
+    // Gmsh footer
+    fv << "};" << endl << endl;
+
+    // Close file
+    fv.close();
+    cout << "Done!" << endl;
 }
