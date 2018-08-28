@@ -62,7 +62,7 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
 
     // Close file
     fv.close();
-    cout << "Done!" << endl << endl;
+    cout << "Done!" << endl;
 
     //// Write to gmsh .pos file
     cout << "Writing field variables file in 'M.pos'... " << flush;
@@ -75,17 +75,17 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
     // Mach number
     for (int f = 0; f < fPan.nF; ++f) {
         fv << "SH(";
-        for (int i = 0; i < 1; ++i) {
-            for (int j = 0; j < 2; ++j) {
-                for (int k = 0; k < 2; ++k) {
-                    fv << fPan.vX(f,i) << "," << fPan.vY(f,j) << "," << fPan.vZ(f,k) << ',';
-                }
-            }
-        }
-        fv << fPan.vX(f,1) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,1) << "}(";
+        fv << fPan.vX(f,0) << "," << fPan.vY(f,0) << "," << fPan.vZ(f,0) << ',';
+        fv << fPan.vX(f,1) << "," << fPan.vY(f,0) << "," << fPan.vZ(f,0) << ',';
+        fv << fPan.vX(f,1) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,0) << ',';
+        fv << fPan.vX(f,0) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,0) << ',';
+        fv << fPan.vX(f,0) << "," << fPan.vY(f,0) << "," << fPan.vZ(f,1) << ',';
+        fv << fPan.vX(f,1) << "," << fPan.vY(f,0) << "," << fPan.vZ(f,1) << ',';
+        fv << fPan.vX(f,1) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,1) << ',';
+        fv << fPan.vX(f,0) << "," << fPan.vY(f,1) << "," << fPan.vZ(f,1) << "){";
         for (int i = 0; i < 7; ++i)
             fv << fPan.M(f) << ",";
-        fv << fPan.M(f) << ");" << endl;
+        fv << fPan.M(f) << "};" << endl;
     }
 
     // Gmsh footer
@@ -93,5 +93,5 @@ void write_fv(string outPath, double alpha, double Minf, Field &fPan) {
 
     // Close file
     fv.close();
-    cout << "Done!" << endl;
+    cout << "Done!" << endl << endl;
 }

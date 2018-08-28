@@ -17,14 +17,15 @@ if(COMPILER_SUPPORTS_CXX11)
 elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 else()
-        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+# Add a automated way to find Eigen
 # Set path for header and source files
 IF (UNIX)
-    include_directories(include)
+    include_directories(include; /usr/local/include/eigen-3.3.5/)
 ELSEIF(WIN32)
-    include_directories(include; C:/Eigen-3.3.3/)
+    include_directories(include; C:/eigen-3.3.5/)
 ENDIF()
 set(SOURCE_FILES src/main.cpp
         src/pre.cpp
@@ -61,6 +62,14 @@ if( NOT CMAKE_BUILD_TYPE )
 MinSizeRel."
        FORCE )
 endif()
+
+# Set verbose mode
+if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVERBOSE")
+endif()
+
+# Specifiy exe location
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Set Release or Debug option
 IF(CMAKE_CXX_FLAGS_RELEASE)

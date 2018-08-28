@@ -51,6 +51,8 @@ void solve_body(Vector3d &vInf, VectorXd &RHS, MatrixX3d &vSigma, Network &bPan,
     //cout << "Doublets max. value: " << panDoublet.maxCoeff() << endl;
     //for (int i = 0; i < nP; ++i)
     //    cout << i << ' ' << panDoublet(i) << endl;
-    cout << "System solved with relative error: " << (b2bAIC.A * bPan.mu - RHS).norm() / RHS.norm() << endl;
+    #ifdef VERBOSE
+        cout << "System solved with relative error: " << (b2bAIC.A * bPan.mu - RHS).norm() / RHS.norm() << endl;
+    #endif
     cout << endl;
 }

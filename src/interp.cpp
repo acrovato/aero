@@ -66,11 +66,13 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     // Error measure
     avg = sqrt((x2-x0)*(x2-x0) + (y2-y0)*(y2-y0) + (z2-z0)*(z2-z0));
     zd = n(0)*(x-cg(0)) + n(1)*(y-cg(1)) + n(2)*(z-cg(2));
+    #ifdef VERBOSE
     if (abs(zd/avg) > TOL) {
         cout << endl << "Interpolated point is far from interpolation plane; bilinear interpolation might be inaccurate!" << endl;
         cout << "Distance versus interpolation plane diagonal: " << zd << " / " << avg << " > " << TOL << endl;
         cout << "This might be caused by a coarse panelling of the body surface." << endl;
     }
+    #endif
 
     //// Interpolation
     // Intermediate vectors

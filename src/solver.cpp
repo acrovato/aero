@@ -33,6 +33,14 @@
 #include "solve_field.h"
 #include "compute_sVars.h"
 
+#define ANSI_COLOR_RED     "\x1b[1;31m"
+#define ANSI_COLOR_GREEN   "\x1b[1;32m"
+#define ANSI_COLOR_YELLOW  "\x1b[1;33m"
+#define ANSI_COLOR_BLUE    "\x1b[1;34m"
+#define ANSI_COLOR_MAGENTA "\x1b[1;35m"
+#define ANSI_COLOR_CYAN    "\x1b[1;36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 #define NDIM 3
 
 using namespace std;
@@ -111,9 +119,9 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             if (!itCnt)
                 deltaSigma0 = deltaSigma.norm();
             if (isnan(deltaSigma.norm())) {
-                cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
-                cout << ">>Process diverged at iteration #" << itCnt + 1 << "!<<" << endl;
-                cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;
+                cout << ANSI_COLOR_RED << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
+                cout << ">> Process diverged at iteration #" << itCnt + 1 << "!" << endl;
+                cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << ANSI_COLOR_RESET << endl << endl;
                 exit(EXIT_FAILURE);
             }
             cout << "Relative source change at iteration " << itCnt << ": " << log10(deltaSigma.norm()/deltaSigma0) << endl;
@@ -121,9 +129,9 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             itCnt++;
         } while(log10(deltaSigma.norm()/deltaSigma0) > -numC.RRED);
         //TODO Consider using true residual (div(U) - sigma -> 0). Currently impossible since accuracy.
-        cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
-        cout << ">>Process converged in " << itCnt << " iteration(s)!<<" << endl;
-        cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << endl << endl;
+        cout << ANSI_COLOR_GREEN << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
+        cout << ">> Process converged in " << itCnt << " iteration(s)!" << endl;
+        cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << ANSI_COLOR_RESET << endl << endl;
     }
     // Panel Method
     else {

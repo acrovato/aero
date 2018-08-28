@@ -23,22 +23,6 @@
 // *Numerics*
 // - numC: numerical parameters (structure)
 
-//// Acronym
-// - STREAM: Swift Transonic Enhanced Aerodynamic Modeling
-//		JET-STREAM, STEAM
-// - QtAero: Quick Aerodynamics
-// - STAMPD: Swift Transonic Aerodynamic Modeling for Preliminary Design
-// - STAR(PAD): Swift Transonic Aerodynamics (for Preliminary Aircraft Design)
-// - SAMPAD: Swift Aerodynamic Modeling for Preliminary Aircraft Design
-// - CELIA: C - Enhanced Lightweight Aerodynamics
-// - CeLiA: C Library for Aerodynamics
-// - CeLIA: C Library for swIft (or quIck) Aerodynamics
-// - CLELiA: C Library for Enhanced Linear Aerodynamics
-// - ST(R)ELA: Swift Transonic Enhanced Lightweight Aerodynamics
-// - SCALP: Swift Computational Aerodynamic Loads Prediction
-// - AeroMAD: Aerodynamic Modeling for Aircraft Design
-// - ETA: Enhanced Transonic Aerodynamics
-
 #include <iostream>
 #include <Eigen/Dense>
 #include <ctime>
