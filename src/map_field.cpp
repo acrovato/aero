@@ -120,15 +120,17 @@ void map_field(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Field &fPan
     //// Control display
     cout << "Done!" << endl;
     cout << "Field map: " << fPan.fMap.size() << endl;
-    //for (int j = 0; j < fPan.nY; ++j) {
-    //    cout << endl;
-    //    for (int k = 0; k < fPan.nZ; ++k) {
-    //        cout << endl;
-    //        for (int i = 0; i < fPan.nX; ++i)
-    //            cout << fPan.fMap(i + k * fPan.nX + j * fPan.nX * fPan.nZ) << ' ';
-    //    }
-    //}
-    //cout << endl;
+    #ifdef VERBOSE
+        for (int j = 0; j < fPan.nY; ++j) {
+            cout << endl;
+            for (int k = 0; k < fPan.nZ; ++k) {
+                cout << endl;
+                for (int i = 0; i < fPan.nX; ++i)
+                    cout << fPan.fMap(i + k * fPan.nX + j * fPan.nX * fPan.nZ) << ' ';
+            }
+        }
+        cout << endl;
+    #endif
     cout << "Exterior cells: " << fPan.eIdx.rows() << endl;
     cout << "Interior cells: " << fPan.iIdx.rows() << endl;
     cout << endl;

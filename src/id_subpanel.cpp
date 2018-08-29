@@ -95,12 +95,14 @@ void id_subpanel(Network &bPan, Field &fPan, Subpanel &sp, Subpanel_AIC &spAIC) 
     cout << "Done!" << endl;
     cout << "Number of panels to split: " << sp.sI.size() << endl;
     cout << "Number of sub-panels per panel: " << sp.NS << endl;
-    //for(int i = 0; i < sp.sI.size(); i++) {
-    //    cout << sp.sI[i] << ": ";
-    //    for(int j = 0; j < sp.fI[i].size(); j++) {
-    //        cout << sp.fI[i][j] << ',';
-    //    }
-    //    cout << endl;
-    //}
+    #ifdef VERBOSE
+        for(int i = 0; i < sp.sI.size(); i++) {
+            cout << sp.sI[i] << ": ";
+            for(int j = 0; j < sp.fI[i].size(); j++) {
+                cout << sp.fI[i][j] << ',';
+            }
+            cout << endl;
+        }
+    #endif
     cout << endl;
 }

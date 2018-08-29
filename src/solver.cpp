@@ -39,6 +39,7 @@
 #define ANSI_COLOR_BLUE    "\x1b[1;34m"
 #define ANSI_COLOR_MAGENTA "\x1b[1;35m"
 #define ANSI_COLOR_CYAN    "\x1b[1;36m"
+#define ANSI_COLOR_WHITE   "\e[1;37m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 #define NDIM 3
@@ -51,10 +52,11 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
 
 
     //// Begin solver
+    cout << ANSI_COLOR_BLUE;
     cout << "*********************" << endl;
     cout << "*Beginning solver...*" << endl;
-    cout << "*********************" << endl;
-    cout << endl;
+    cout << "*********************";
+    cout << ANSI_COLOR_RESET << endl;
 
     //// Initialization
     // AIC matrices
@@ -119,19 +121,29 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
             if (!itCnt)
                 deltaSigma0 = deltaSigma.norm();
             if (isnan(deltaSigma.norm())) {
-                cout << ANSI_COLOR_RED << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
-                cout << ">> Process diverged at iteration #" << itCnt + 1 << "!" << endl;
-                cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << ANSI_COLOR_RESET << endl << endl;
-                exit(EXIT_FAILURE);
+                break;
             }
+            cout << ANSI_COLOR_CYAN;
             cout << "Relative source change at iteration " << itCnt << ": " << log10(deltaSigma.norm()/deltaSigma0) << endl;
-            cout << "FPE global residual at iteration " << itCnt << ": " << log10(fPan.epsilon.norm()) << endl << endl;
+            cout << "FPE global residual at iteration " << itCnt << ": " << log10(fPan.epsilon.norm());
+            cout << ANSI_COLOR_RESET << endl << endl;
             itCnt++;
         } while(log10(deltaSigma.norm()/deltaSigma0) > -numC.RRED);
         //TODO Consider using true residual (div(U) - sigma -> 0). Currently impossible since accuracy.
-        cout << ANSI_COLOR_GREEN << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
-        cout << ">> Process converged in " << itCnt << " iteration(s)!" << endl;
-        cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧" << ANSI_COLOR_RESET << endl << endl;
+        if (isnan(deltaSigma.norm())) {
+            cout << ANSI_COLOR_RED;
+            cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
+            cout << ">> Process diverged at iteration #" << itCnt + 1 << "!" << endl;
+            cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧";
+            cout << ANSI_COLOR_RESET << endl << endl;
+        }
+        else {
+            cout << ANSI_COLOR_GREEN;
+            cout << "∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨" << endl;
+            cout << ">> Process converged in " << itCnt << " iteration(s)!" << endl;
+            cout << "∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧";
+            cout << ANSI_COLOR_RESET << endl << endl;
+        }
     }
     // Panel Method
     else {
@@ -145,8 +157,10 @@ int solver(Numerical_CST &numC, bool symY, double sRef, double alpha, Vector3d &
     compute_sVars(symY, sRef, alpha, Minf, vInf, vSigma, bPan, cL, cD);
 
     //// End solver
+    cout << ANSI_COLOR_BLUE;
     cout << "********************" << endl;
     cout << "*Solver successful!*" << endl;
-    cout << "********************" << endl;
+    cout << "********************";
+    cout << ANSI_COLOR_RESET << endl;
     return 0;
 }

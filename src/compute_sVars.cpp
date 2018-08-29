@@ -136,12 +136,14 @@ void compute_sVars(bool symY, double sRef, double alpha, double Minf, Vector3d &
 
     //// Control display
     cout << "Done!" << endl;
-    cout << "Surface velocities: " << bPan.U.rows() << "X" << bPan.U.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << vB(i,0) << ' ' << vB(i,1) << ' ' << vB(i,2) << endl;
-    cout << "Pressure coefficients: " << bPan.cP.rows() << "X" << bPan.cP.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << cP(i) << endl;
+    #ifdef VERBOSE
+        cout << "Surface velocities: " << bPan.U.rows() << "X" << bPan.U.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.U(i,0) << ' ' << bPan.U(i,1) << ' ' << bPan.U(i,2) << endl;
+        cout << "Pressure coefficients: " << bPan.cP.rows() << "X" << bPan.cP.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.cP(i) << endl;
+    #endif
     cout << "Aerodynamic forces:" << endl;
     cout << "Cx = " << cX << endl;
     cout << "Cz = " << cZ << endl;

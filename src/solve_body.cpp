@@ -42,17 +42,19 @@ void solve_body(Vector3d &vInf, VectorXd &RHS, MatrixX3d &vSigma, Network &bPan,
     //// Control display
     cout << "Done!" << endl;
     cout << "Surface sources strength: " << bPan.tau.norm() << endl;
-    //cout << "Sources min. value: " << panSource.minCoeff() << endl;
-    //cout << "Sources max. value: " << panSource.maxCoeff() << endl;
-    //for (int i = 0; i < nP; ++i)
-    //    cout << i << ' ' << panSource(i) << endl;
-    cout << "Surface doublets strength: " << bPan.mu.norm() << endl;
-    //cout << "Doublets min. value: " << panDoublet.minCoeff() << endl;
-    //cout << "Doublets max. value: " << panDoublet.maxCoeff() << endl;
-    //for (int i = 0; i < nP; ++i)
-    //    cout << i << ' ' << panDoublet(i) << endl;
     #ifdef VERBOSE
-        cout << "System solved with relative error: " << (b2bAIC.A * bPan.mu - RHS).norm() / RHS.norm() << endl;
+        cout << "Sources min. value: " << bPan.tau.minCoeff() << endl;
+        cout << "Sources max. value: " << bPan.tau.maxCoeff() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.tau(i) << endl;
+    #endif
+    cout << "Surface doublets strength: " << bPan.mu.norm() << endl;
+    #ifdef VERBOSE
+        cout << "Doublets min. value: " << bPan.mu.minCoeff() << endl;
+        cout << "Doublets max. value: " << bPan.mu.maxCoeff() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.mu(i) << endl;
+            cout << "System solved with relative error: " << (b2bAIC.A * bPan.mu - RHS).norm() / RHS.norm() << endl;
     #endif
     cout << endl;
 }

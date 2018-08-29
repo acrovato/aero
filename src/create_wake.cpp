@@ -105,23 +105,25 @@ void create_wake(MatrixX3d &sGrid, Network &bPan, Network &wPan) {
     //// Control display
     cout << "Done!" << endl;
     cout << "Wake panels extend to " << dwnstrm << " in the x direction" << endl;
-    cout << "Collocation points: " << wPan.CG.rows() << 'X' << wPan.CG.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakePts(i,0) << ' ' << wakePts(i,1) << ' ' << wakePts(i,2) << endl;
-    cout << "Panel surfaces: " << wPan.S.rows() << 'X' << wPan.S.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakeSurf(i) << endl;
-    cout << "Unit normals: " << wPan.n.rows() << 'X' << wPan.n.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakeNrm(i,0) << ' ' << wakeNrm(i,1) << ' ' << wakeNrm(i,2) << endl;
-    cout << "Unit longitudinal vectors: " << wPan.l.rows() << 'X' << wPan.l.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakeLng(i,0) << ' ' << wakeLng(i,1) << ' ' << wakeLng(i,2) << endl;
-    cout << "Unit transverse vectors: " << wPan.t.rows() << 'X' << wPan.t.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakeTrv(i,0) << ' ' << wakeTrv(i,1) << ' ' << wakeTrv(i,2) << endl;
-    cout << "Unit perpendicular vectors: " << wPan.p.rows() << 'X' << wPan.p.cols() << endl;
-    //for (int i = 0; i < m; ++i)
-    //    cout << i << ' ' << wakePrp(i,0) << ' ' << wakePrp(i,1) << ' ' << wakePrp(i,2) << endl;
+    #ifdef VERBOSE
+        cout << "Collocation points: " << wPan.CG.rows() << 'X' << wPan.CG.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.CG(i,0) << ' ' << wPan.CG(i,1) << ' ' << wPan.CG(i,2) << endl;
+        cout << "Panel surfaces: " << wPan.S.rows() << 'X' << wPan.S.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.S(i) << endl;
+        cout << "Unit normals: " << wPan.n.rows() << 'X' << wPan.n.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.n(i,0) << ' ' << wPan.n(i,1) << ' ' << wPan.n(i,2) << endl;
+        cout << "Unit longitudinal vectors: " << wPan.l.rows() << 'X' << wPan.l.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.l(i,0) << ' ' << wPan.l(i,1) << ' ' << wPan.l(i,2) << endl;
+        cout << "Unit transverse vectors: " << wPan.t.rows() << 'X' << wPan.t.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.t(i,0) << ' ' << wPan.t(i,1) << ' ' << wPan.t(i,2) << endl;
+        cout << "Unit perpendicular vectors: " << wPan.p.rows() << 'X' << wPan.p.cols() << endl;
+        for (int i = 0; i < wPan.nP; ++i)
+            cout << i << ' ' << wPan.p(i,0) << ' ' << wPan.p(i,1) << ' ' << wPan.p(i,2) << endl;
+    #endif
     cout << endl;
 }

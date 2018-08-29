@@ -80,8 +80,10 @@ void read_sgrid(string path, MatrixX3d &sGrid, Network &bPan){
     cout << "Number of chordwise points: " << bPan.nC << endl;
     cout << "Number of spanwise points: " << bPan.nS << endl;
     cout << "Number of panels: " << bPan.nP << endl;
-    cout << "Surface points: " << sGrid.rows() << 'X' << sGrid.cols() << endl;
-    //for (int i = 0; i < nC*nS; ++i)
-    //    cout << i << ' ' << sGrid(i,0) << ' ' << sGrid(i,1) << ' ' << sGrid(i,2) << endl;
+    #ifdef VERBOSE
+        cout << "Surface points: " << sGrid.rows() << 'X' << sGrid.cols() << endl;
+        for (int i = 0; i < bPan.nC*bPan.nS; ++i)
+            cout << i << ' ' << sGrid(i,0) << ' ' << sGrid(i,1) << ' ' << sGrid(i,2) << endl;
+    #endif
     cout << endl;
 }

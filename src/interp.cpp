@@ -35,7 +35,7 @@ double interp(double x0, double y0, double z0, double x1, double y1, double z1,
     double u, v ;// inverse bilinear interpolation parameters
     double i0, i1, i ;// interpolated quantities
 
-    //// TODO if it works, move change of coordinates out of file to improve CPU runtime
+    //// Move change of coordinates out of file to improve CPU runtime
     //// Change of axes
     // Plane center
     cg(0) = 0.25*(x0 + x1 + x2 + x3);

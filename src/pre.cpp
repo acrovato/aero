@@ -30,6 +30,9 @@
 #include "map_field.h"
 #include "map_derivatives.h"
 
+#define ANSI_COLOR_BLUE    "\x1b[1;34m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 using namespace std;
 using namespace Eigen;
 
@@ -46,10 +49,11 @@ int pre(char *argv[], Numerical_CST &numC, bool &symY, double &sRef, double &mac
     string surfGridPath = argv[2];
 
     //// Begin preprocessing
+    cout << ANSI_COLOR_BLUE;
     cout << "*****************************" << endl;
     cout << "*Beginning pre-processing...*" << endl;
-    cout << "*****************************" << endl;
-    cout << endl;
+    cout << "*****************************";
+    cout << ANSI_COLOR_RESET << endl;
 
     // Read config and grid from files
     read_config(configParamPath, numC, symY, sRef, machInf, AoA, box, fPan, sp);
@@ -70,8 +74,10 @@ int pre(char *argv[], Numerical_CST &numC, bool &symY, double &sRef, double &mac
     map_derivatives(sGrid, numC, bPan, wPan, fPan);
 
     //// End preprocessing
+    cout << ANSI_COLOR_BLUE;
     cout << "****************************" << endl;
     cout << "*Pre-processing successful!*" << endl;
-    cout << "****************************" << endl;
+    cout << "****************************";
+    cout << ANSI_COLOR_RESET << endl;
     return 0;
 }

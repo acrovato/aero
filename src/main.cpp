@@ -30,6 +30,9 @@
 #include "solver.h"
 #include "post.h"
 
+#define ANSI_COLOR_BLUE    "\x1b[1;34m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 using namespace std;
 using namespace Eigen;
 
@@ -57,9 +60,10 @@ int main( int argc, char *argv[] ) {
     double cL = 0, cD = 0;
 
     //// Begin flow
-    // Hello World: Fast and Accurate Steady Transonic Aerodynamics for AeroElastic Tailoring
+    // Hello World
     time_t now = time(0); // get time now
     char* localNow = ctime(&now);
+    cout << ANSI_COLOR_BLUE;
     cout << "**********************************" << endl;
     cout << "**             \\_/              **" << endl;
     cout << "**     \\______O(_)O_______/     **" << endl;
@@ -68,7 +72,8 @@ int main( int argc, char *argv[] ) {
     cout << "**  /  __|__ | |   (_)  /  \\    **" << endl;
     cout << "** (  |__|__|| |__ | | / /\\ \\   **" << endl;
     cout << "**  \\____|__ |____||_|/_/¯¯\\_\\  **" << endl;
-    cout << "**********************************" << endl << endl;
+    cout << "**********************************";
+    cout << ANSI_COLOR_RESET << endl;
     cout << "Hi! My name is CeLiA v1.0-1806" << endl;
     cout << "Solver started on " << localNow << endl;
 

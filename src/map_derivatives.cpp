@@ -347,12 +347,14 @@ void map_derivatives(MatrixX3d &sGrid, Numerical_CST &numC, Network &bPan, Netwo
 
     //// Control display
     cout << "Done!" << endl;
-    cout << "Allowed derivatives (body) map: " << fPan.fbdMap.rows() << 'X' << fPan.fbdMap.cols() << endl;
-    //for (int i = 0; i < fPan.nF; i++)
-    //    cout << fPan.fbdMap.row(i) << endl;
-    //cout << endl;
-    cout << "Allowed derivatives (wake) map: " << fPan.fwdMap.rows() << 'X' << fPan.fwdMap.cols() << endl;
-    //for (int i = 0; i < fPan.nF; i++)
-    //    cout << fPan.fwdMap.row(i) << endl;
+    #ifdef VERBOSE
+        cout << "Allowed derivatives (body) map: " << fPan.fbdMap.rows() << 'X' << fPan.fbdMap.cols() << endl;
+        for (int i = 0; i < fPan.nF; i++)
+            cout << fPan.fbdMap.row(i) << endl;
+        cout << endl;
+        cout << "Allowed derivatives (wake) map: " << fPan.fwdMap.rows() << 'X' << fPan.fwdMap.cols() << endl;
+        for (int i = 0; i < fPan.nF; i++)
+            cout << fPan.fwdMap.row(i) << endl;
+    #endif
     cout << endl;
 }

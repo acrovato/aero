@@ -105,23 +105,25 @@ void create_panel(MatrixX3d &sGrid, Network &bPan) {
 
     //// Control display
     cout << "Done!" << endl;
-    cout << "Collocation points: " << bPan.CG.rows() << 'X' << bPan.CG.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panPts(i,0) << ' ' << panPts(i,1) << ' ' << panPts(i,2) << endl;
-    cout << "Panel surfaces: " << bPan.S.rows() << 'X' << bPan.S.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panSurf(i) << endl;
-    cout << "Unit normals: " << bPan.n.rows() << 'X' << bPan.n.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panNrm(i,0) << ' ' << panNrm(i,1) << ' ' << panNrm(i,2) << endl;
-    cout << "Unit longitudinal vectors: " << bPan.l.rows() << 'X' << bPan.l.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panLng(i,0) << ' ' << panLng(i,1) << ' ' << panLng(i,2) << endl;
-    cout << "Unit transverse vectors: " << bPan.t.rows() << 'X' << bPan.t.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panTrv(i,0) << ' ' << panTrv(i,1) << ' ' << panTrv(i,2) << endl;
-    cout << "Unit perpendicular vectors: " << bPan.p.rows() << 'X' << bPan.p.cols() << endl;
-    //for (int i = 0; i < p; ++i)
-    //    cout << i << ' ' << panPrp(i,0) << ' ' << panPrp(i,1) << ' ' << panPrp(i,2) << endl;
+    #ifdef VERBOSE
+        cout << "Collocation points: " << bPan.CG.rows() << 'X' << bPan.CG.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.CG(i,0) << ' ' << bPan.CG(i,1) << ' ' << bPan.CG(i,2) << endl;
+        cout << "Panel surfaces: " << bPan.S.rows() << 'X' << bPan.S.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.S(i) << endl;
+        cout << "Unit normals: " << bPan.n.rows() << 'X' << bPan.n.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.n(i,0) << ' ' << bPan.n(i,1) << ' ' << bPan.n(i,2) << endl;
+        cout << "Unit longitudinal vectors: " << bPan.l.rows() << 'X' << bPan.l.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.l(i,0) << ' ' << bPan.l(i,1) << ' ' << bPan.l(i,2) << endl;
+        cout << "Unit transverse vectors: " << bPan.t.rows() << 'X' << bPan.t.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.t(i,0) << ' ' << bPan.t(i,1) << ' ' << bPan.t(i,2) << endl;
+        cout << "Unit perpendicular vectors: " << bPan.p.rows() << 'X' << bPan.p.cols() << endl;
+        for (int i = 0; i < bPan.nP; ++i)
+            cout << i << ' ' << bPan.p(i,0) << ' ' << bPan.p(i,1) << ' ' << bPan.p(i,2) << endl;
+    #endif
     cout << endl;
 }

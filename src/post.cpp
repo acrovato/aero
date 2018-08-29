@@ -20,15 +20,20 @@
 #include "write_sp.h"
 #include "write_fv.h"
 
+#define ANSI_COLOR_BLUE    "\x1b[1;34m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 using namespace std;
 using namespace Eigen;
 
 int post(double sRef, double alpha, double Minf, Network &bPan, Field &fPan, double cL, double cD) {
 
     //// Begin post-processing
+    cout << ANSI_COLOR_BLUE;
     cout << "******************************" << endl;
     cout << "*Beginning post-processing...*" << endl;
-    cout << "******************************" << endl << endl;
+    cout << "******************************";
+    cout << ANSI_COLOR_RESET << endl;
 
     // Paths
     string outPath;
@@ -39,8 +44,10 @@ int post(double sRef, double alpha, double Minf, Network &bPan, Field &fPan, dou
     write_fv(outPath, alpha, Minf, fPan);
 
     //// End post-processing
+    cout << ANSI_COLOR_BLUE;
     cout << "*****************************" << endl;
     cout << "*Post-processing successful!*" << endl;
-    cout << "*****************************" << endl;
+    cout << "*****************************";
+    cout << ANSI_COLOR_RESET << endl;
     return 0;
 }

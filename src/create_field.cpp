@@ -73,19 +73,21 @@ void create_field(array<array<double, 3>, 8> &box, Field &fPan) {
 
     //// Control display
     cout << "Done!" << endl;
-    cout << "Field cell center points: " << fPan.CG.rows() << 'X' << fPan.CG.cols() << endl;
-    //for (int i = 0; i < div; ++i)
-    //    cout << i << ' ' << fldPts(i,0) << ' ' << fldPts(i,1) << ' ' << fldPts(i,2) << endl;
-    cout << "Field cell corner points: " << 8 * fPan.vX.rows() << 'X' << fPan.vX.cols() << endl;
-    //for (int i = 0; i < div; ++i) {
-    //    cout << i << '\t' << fldXCrn(i,0) << ' ' << fldYCrn(i,0) << ' ' << fldZCrn(i,0) << endl;
-    //    cout << '\t' << fldXCrn(i,1) << ' ' << fldYCrn(i,0) << ' ' << fldZCrn(i,0) << endl;
-    //    cout << '\t' << fldXCrn(i,0) << ' ' << fldYCrn(i,0) << ' ' << fldZCrn(i,1) << endl;
-    //    cout << '\t' << fldXCrn(i,1) << ' ' << fldYCrn(i,0) << ' ' << fldZCrn(i,1) << endl;
-    //    cout << '\t' << fldXCrn(i,0) << ' ' << fldYCrn(i,1) << ' ' << fldZCrn(i,0) << endl;
-    //    cout << '\t' << fldXCrn(i,1) << ' ' << fldYCrn(i,1) << ' ' << fldZCrn(i,0) << endl;
-    //    cout << '\t' << fldXCrn(i,0) << ' ' << fldYCrn(i,1) << ' ' << fldZCrn(i,1) << endl;
-    //    cout << '\t' << fldXCrn(i,1) << ' ' << fldYCrn(i,1) << ' ' << fldZCrn(i,1) << endl;
-    //}
+    #ifdef VERBOSE
+        cout << "Field cell center points: " << fPan.CG.rows() << 'X' << fPan.CG.cols() << endl;
+        for (int i = 0; i < fPan.nF; ++i)
+            cout << i << ' ' << fPan.CG(i,0) << ' ' << fPan.CG(i,1) << ' ' << fPan.CG(i,2) << endl;
+        cout << "Field cell corner points: " << 8 * fPan.vX.rows() << 'X' << fPan.vX.cols() << endl;
+        for (int i = 0; i < fPan.nF; ++i) {
+            cout << i << '\t' << fPan.vX(i,0) << ' ' << fPan.vY(i,0) << ' ' << fPan.vZ(i,0) << endl;
+            cout << '\t' << fPan.vX(i,1) << ' ' << fPan.vY(i,0) << ' ' << fPan.vZ(i,0) << endl;
+            cout << '\t' << fPan.vX(i,0) << ' ' << fPan.vY(i,0) << ' ' << fPan.vZ(i,1) << endl;
+            cout << '\t' << fPan.vX(i,1) << ' ' << fPan.vY(i,0) << ' ' << fPan.vZ(i,1) << endl;
+            cout << '\t' << fPan.vX(i,0) << ' ' << fPan.vY(i,1) << ' ' << fPan.vZ(i,0) << endl;
+            cout << '\t' << fPan.vX(i,1) << ' ' << fPan.vY(i,1) << ' ' << fPan.vZ(i,0) << endl;
+            cout << '\t' << fPan.vX(i,0) << ' ' << fPan.vY(i,1) << ' ' << fPan.vZ(i,1) << endl;
+            cout << '\t' << fPan.vX(i,1) << ' ' << fPan.vY(i,1) << ' ' << fPan.vZ(i,1) << endl;
+        }
+    #endif
     cout << endl;
 }
