@@ -64,23 +64,22 @@ int main( int argc, char *argv[] ) {
     time_t now = time(0); // get time now
     char* localNow = ctime(&now);
     cout << ANSI_COLOR_BLUE;
-    cout << "**********************************" << endl;
-    cout << "**             \\_/              **" << endl;
-    cout << "**     \\______O(_)O_______/     **" << endl;
-    cout << "**                              **" << endl;
-    cout << "**   ____     _     _    __     **" << endl;
-    cout << "**  /  __|__ | |   (_)  /  \\    **" << endl;
-    cout << "** (  |__|__|| |__ | | / /\\ \\   **" << endl;
-    cout << "**  \\____|__ |____||_|/_/¯¯\\_\\  **" << endl;
-    cout << "**********************************";
+    cout << "***********************************" << endl;
+    cout << "**              \\_/              **" << endl;
+    cout << "**     \\_______O(_)O_______/     **" << endl;
+    cout << "**         _                     **" << endl;
+    cout << "**        / \\   __  __  __       **" << endl;
+    cout << "**       / _ \\ |__||__||  |      **" << endl;
+    cout << "**      /_/ \\_\\|__ |  \\|__|      **" << endl;
+    cout << "***********************************";
     cout << ANSI_COLOR_RESET << endl;
-    cout << "Hi! My name is CeLiA v1.0-1806" << endl;
+    cout << "Hi! My name is Aero v1.0-1809" << endl;
     cout << "Solver started on " << localNow << endl;
 
     // Check parameters
     if (argc != 3) {
         cout << "Incorrect number of parameters provided!" << endl;
-        cout << "Usage: ./celia <pathToConfigFile(.cfg)> <pathToGridgridFile(.pts)>." << endl;
+        cout << "Usage: ./aero <pathToConfigFile(.cfg)> <pathToGridgridFile(.pts)>." << endl;
         return 1;
     }
 

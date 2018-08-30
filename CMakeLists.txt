@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(FPMv1)
+project(AeroMAD)
 
 # Check OS
 #IF(UNIX AND NOT APPLE)
@@ -75,9 +75,8 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # Set Release or Debug option
 IF(CMAKE_CXX_FLAGS_RELEASE OR CMAKE_CXX_FLAGS_RELWITHDEBINFO)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCMAKE_CXX_FLAGS=-O3")
-    add_executable(celia ${SOURCE_FILES})
 ELSEIF(CMAKE_CXX_FLAGS_DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCMAKE_CXX_FLAGS=-G -DCMAKE_CXX_FLAGS=-O2")
-    add_executable(frame ${SOURCE_FILES})
 ENDIF()
+add_executable(aero ${SOURCE_FILES})
 
