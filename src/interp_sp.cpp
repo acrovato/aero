@@ -10,6 +10,8 @@
 // Output:
 // - spis: interpolated singularities (row = sub-panel number; col 0 = doublet, col 1 = source)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "interp_sp.h"

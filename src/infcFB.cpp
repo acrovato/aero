@@ -13,6 +13,8 @@
 // Output:
 // - coeff: array of AIC ([0] = u, [1] = v, [2] = w)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <array>
 #include <cmath>

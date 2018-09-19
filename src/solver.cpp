@@ -24,6 +24,8 @@
 // - 0, if function succeeded
 // - 1, if function failed
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "solver.h"

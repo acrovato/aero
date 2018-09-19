@@ -4,6 +4,8 @@
 // into sub-panels, NS is the number of sub-panel on a panel and NF is the number of field cell to close to a particular
 // panel.
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_SUBPANEL_AIC_H
 #define FPMV1_SUBPANEL_AIC_H
 

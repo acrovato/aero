@@ -12,6 +12,8 @@
 // Output:
 // - coeff: array of AIC ([0] = mu, [1] = tau)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <array>

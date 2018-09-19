@@ -6,6 +6,8 @@
 // - box: temporary array containg vertices of domain
 // - fPan: field panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <array>
 #include <iostream>
 #include <Eigen/Dense>

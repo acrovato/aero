@@ -7,6 +7,8 @@
 // - alpha: freestream angle of attack
 // - fPan: (network of) field panels
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>

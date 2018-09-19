@@ -13,6 +13,8 @@
 // - sp: sub-panels (structure)
 // - spAIC: body to field sub-panel AICs (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <array>

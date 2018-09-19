@@ -8,6 +8,8 @@
 // - bPan: body panels (structure)
 // - wPan: wake panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "create_wake.h"

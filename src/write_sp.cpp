@@ -10,6 +10,8 @@
 // - cL: lift coefficient
 // - cD: drag coefficient
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>

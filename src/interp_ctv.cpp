@@ -11,6 +11,8 @@
 // Output:
 // - vis: Matrix of interpolate singularities (row = vertex number; col 0 = doublet, col 1 = source)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "interp_ctv.h"

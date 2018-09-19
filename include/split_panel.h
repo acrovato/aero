@@ -1,3 +1,5 @@
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_SPLIT_PANEL_H
 #define FPMV1_SPLIT_PANEL_H
 

@@ -11,6 +11,8 @@
 // CONSIDER USING fixed size of boolean vector instead of spP
 // CONSIDER USING octree (tree) to find points instead of double loop
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>

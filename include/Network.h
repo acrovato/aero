@@ -5,6 +5,8 @@
 // - geometrical information (Panels centers and vertices,...)
 // - flow information ( velocity,...)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_NETWORK_H
 #define FPMV1_NETWORK_H
 

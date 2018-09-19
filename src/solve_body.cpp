@@ -12,6 +12,8 @@
 // - bPan: (network of) body panels (structure)
 // - b2bAIC: body to body AIC (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "solve_body.h"

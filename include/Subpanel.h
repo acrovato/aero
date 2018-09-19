@@ -1,6 +1,8 @@
 //// Subpanel structure
 // Structure containing information about sub-panels
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_SUBPANEL_H
 #define FPMV1_SUBPANEL_H
 

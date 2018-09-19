@@ -1,6 +1,8 @@
 //// Numerical constants structure
 // Structure containing numerical constants
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_NUMERICAL_CST_H
 #define FPMV1_NUMERICAL_CST_H
 

@@ -11,6 +11,8 @@
 // Output:
 // - i: interpolated quantity
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "interp.h"

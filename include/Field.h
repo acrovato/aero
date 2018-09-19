@@ -5,6 +5,8 @@
 // - geometrical information (field panels centers and vertices,...)
 // - flow information (velocity,...)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_FIELD_H
 #define FPMV1_FIELD_H
 

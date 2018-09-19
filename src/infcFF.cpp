@@ -14,6 +14,8 @@
 // Output:
 // - coeff: AIC
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <array>
 #include <cmath>

@@ -12,6 +12,8 @@
 // - box: temporary array to store vertices defining the domain
 // - fPan: field panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

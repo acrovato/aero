@@ -11,6 +11,8 @@
 // - bPan: body panels (structure)
 // - fPan: field panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "map_field.h"

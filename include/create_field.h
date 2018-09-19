@@ -1,3 +1,5 @@
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_CREATE_FIELD_H
 #define FPMV1_CREATE_FIELD_H
 

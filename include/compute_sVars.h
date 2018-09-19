@@ -1,3 +1,5 @@
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_COMPUTE_SVARS_H
 #define FPMV1_COMPUTE_SVARS_H
 

@@ -6,6 +6,8 @@
 // - sGrid: temporary dynamic array to store panel vertices
 // - bPan: body panel (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

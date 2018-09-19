@@ -1,6 +1,8 @@
 //// Field to field AIC structure
 // Structure containing field to field AIC matrices
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_FIELD2FIELD_AIC_H
 #define FPMV1_FIELD2FIELD_AIC_H
 

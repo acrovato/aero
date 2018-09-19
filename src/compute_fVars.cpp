@@ -11,6 +11,8 @@
 // - f2fAIC: field to field AIC (structure)
 // - spAIC: body to field AIC for subpanels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "compute_fVars.h"

@@ -9,6 +9,8 @@
 // - bPan: wake panels (structure)
 // - fPan: field panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "map_derivatives.h"

@@ -6,6 +6,8 @@
 // - sGrid: temporary dynamic array containing body panel vertices
 // - bPan: body panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "create_panel.h"

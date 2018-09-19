@@ -1,5 +1,8 @@
 //// Body to body/field AIC structure
 // Structure containing body to body/field AIC matrices
+
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_BODY_AIC_H
 #define FPMV1_BODY_AIC_H
 

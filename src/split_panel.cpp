@@ -16,6 +16,8 @@
 // - fPan: field panels (structure)
 // - sp: sub-panels (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <array>

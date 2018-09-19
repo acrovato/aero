@@ -23,6 +23,8 @@
 // *Numerics*
 // - numC: numerical parameters (structure)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <ctime>

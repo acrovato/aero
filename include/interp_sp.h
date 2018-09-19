@@ -1,3 +1,5 @@
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_INTERP_SP_H
 #define FPMV1_INTERP_SP_H
 

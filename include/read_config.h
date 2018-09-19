@@ -1,3 +1,5 @@
+/* Copyright (C) 2018 Adrien Crovato */
+
 #ifndef FPMV1_READ_CONFIG_H
 #define FPMV1_READ_CONFIG_H
 

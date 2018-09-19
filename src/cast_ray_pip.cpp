@@ -19,6 +19,8 @@
 // Output:
 // - 0 (vector crosses the panel) OR 1 (vector does not cross the panel)
 
+/* Copyright (C) 2018 Adrien Crovato */
+
 #include <iostream>
 #include <Eigen/Dense>
 #include "cast_ray_pip.h"
