@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(AeroMAD)
-
-# Check OS
-#IF(UNIX AND NOT APPLE)
-#IF(WIN32)
-IF(UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
-ENDIF()
+project(Aero)
 
 # Check for C++11
 include(CheckCXXCompilerFlag)
@@ -20,10 +13,14 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-# Add a automated way to find Eigen
-# Set path for header and source files
-IF (UNIX)
+# Add a automated way to find Eigen...
+# Check OS and set path for header and source files
+IF(UNIX AND NOT APPLE)
+    include_directories(include; /usr/include/eigen3/)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
+ELSEIF(APPLE)
     include_directories(include; /usr/local/include/eigen-3.3.5/)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
 ELSEIF(WIN32)
     include_directories(include; C:/eigen-3.3.5/)
 ENDIF()
