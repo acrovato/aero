@@ -9,13 +9,34 @@ Aero was developed at the University of Liège during the academic year 2016-201
 The purpose of Aero was to compute the aerodynamic loads on an arbitrary wing for preliminary aircraft design computations.  
 
 To achieve this goal, a Field Panel Method (FPM) solving the Full Potential Equation was developed.  
-The FPM is an extension of the panel method. The body is discretized in panels onto which singularities are superimposed and a Cartesian grid is added around the body. The Cartesian grid also contain singularities (field sources) modelling the compressibility of the fluid.  
+The FPM is an extension of the panel method. The body is discretized in panels onto which singularities are superimposed and a Cartesian grid is added around the body. The Cartesian grid also contain singularities (field sources) modeling the compressibility of the fluid.  
 
 Additional theory as well as references can be found in the documentation under the [doc](doc/) folder.
 
-### Is Aero finished?
-Not really.  
-The Field Panel Method works well for incompressible or subcritical flows. However as soon as shocks start to appear, the accuracy of the solution quickly drops out. Moreover, the FPM scales as N^2, where N is the number of field cells. The Fast Multipole Method could be implemented to reduce the computational cost.
+### Should I use Aero?
+Several cases should be considered:  
+
+  - [x] Subcritical flow (M_local < 0.95)  
+    The FPM will perform well, but the gain in accuracy will not be relevant compared to the increase in CPU cost when compared to the Panel Method (PM). A Fast Multipole Method (FMM) has to be implemented to decrease the computational time and make it close to a PM. Such methods have already been applied to the PM, so the extension should not be a problem.  
+  - [x] Supercritical flow - really weak shock ( 0.95 < M_local < 1.15)  
+    The FPM will give a better solution than the PM. The cost will not be that high. However, to remain competitive, an acceleration technique such as the Fast Multipole Method should be considered.  
+  - [ ] Supercritical flow - weak shock (1.15 < M_local < 1.3)  
+    The FPM results will be better than the PM, but the shock will be smeared and displaced compared to traditional field methods (Finite Elements/Volumes). Even if the FMM is implemented, the lack in shock resolution would still pose a serious problem for transonic aircraft design.  
+  - [ ] Supercrtical flow - strong shock (M_local > 1.3)  
+    The Full Potential Equation should not be used!  
+
+Test cases illustrating thoses results can be found in the documentation under the [doc](doc/) folder.
+
+### Cite us!
+If you use this work, please acknowledge the authors:  
+```text 
+"Aero: a Field Panel Method for Aerodynamic Loads Computation in Preliminary Aircraft Design"
+```  
+
+The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/xxxxxx "http://hdl.handle.net/2268/xxxxxx"):
+```text
+A. Crovato, G. Dimitriadi, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
+```
   
 ## Compilation
 
