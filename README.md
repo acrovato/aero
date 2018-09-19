@@ -96,24 +96,24 @@ Test
 Required packages  
   - CMake, Eigen3 and gmsh  
   - MinGW  
-    - Download from https://sourceforge.net/projects/mingw/files/ (mingw-get)  
-    - Install the manager  
-    - Install `mingw32-base` and `mingw32-gcc-g++`  
-    - Add `\path\to\MinGW\mingw32\bin` to the `PATH` Environment Variable in Windows  
+      - download from https://sourceforge.net/projects/mingw/files/ (mingw-get)  
+      - install the manager  
+      - install `mingw32-base` and `mingw32-gcc-g++`  
+      - add `\path\to\MinGW\mingw32\bin` to the `PATH` Environment Variable in Windows  
 Path setting (in CMakeLists.txt)  
 ```cmake
 ELSEIF (WIN32)
 include_directories(include; /path/to/eigen)
 ```
 Compilation
-```dos
+```posh
 md build
 cd build
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 mingw32-make -j 4
 ```
 Test
-```dos
+```posh
 .\aero.exe ..\IO\N12.cfg ..\IO\N12.pts
 ```
 
