@@ -57,6 +57,11 @@ sudo apt-get install cmake
 sudo apt-get install libeigen3-dev
 sudo apt-get install gmsh
 ```
+Path setting (in CMakeLists.txt)  
+```cmake
+IF (UNIX AND NOT APPLE)
+include_directories(include; /usr/include/eigen3)
+```
 Compilation
 ```bash
 mkdir build && cd build
@@ -78,7 +83,7 @@ xcode-select --install
 ```
 Path setting (in CMakeLists.txt)  
 ```cmake
-IF (UNIX)
+IF (APPLE)
 include_directories(include; /path/to/eigen)
 ```
 Compilation
