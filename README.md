@@ -39,6 +39,7 @@ A. Crovato, G. Dimitriadi, V.E. Terrapon, University of Liège. *Higher Fidelity
 ```
   
 ## Compilation
+Aero is really simple to compile. It just needs to be linked to the pre-compiled (header based) Eigen library. All the configuration is handled by CMake, so you only need to adapt some path inside the CMakeLists.txt. Additionnaly, you may want to download gmsh to view some results during the post-processing.  
 
 Links to packages  
 
