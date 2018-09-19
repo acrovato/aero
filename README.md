@@ -33,7 +33,7 @@ If you use this work, please acknowledge the authors:
 "Aero: a Field Panel Method for Aerodynamic Loads Computation in Preliminary Aircraft Design"
 ```  
 
-The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/xxxxxx "http://hdl.handle.net/2268/xxxxxx"):
+The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/227902 "http://hdl.handle.net/2268/227902"):
 ```text
 A. Crovato, G. Dimitriadi, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
 ```
@@ -71,10 +71,16 @@ Test
 ### OSX (Clang)
 
 Required packages  
-  - CMake  
-  - Eigen3  
-  - gmsh  
-Update Eigen path in CMakeLists.txt accordingly  
+  - CMake, Eigen3 and gmsh  
+  - Clang (through Command Line Tools)
+```bash
+xcode-select --install
+```
+Path setting (in CMakeLists.txt)  
+```cmake
+IF (UNIX)
+include_directories(include; /path/to/eigen)
+```
 Compilation
 ```bash
 mkdir build && cd build
@@ -86,12 +92,30 @@ Test
 ./aero ../IO/N12.cfg ../IO/N12.pts
 ```
 
-### Windows (minGW, not tested)
+### Windows (MinGW)
 Required packages  
-  - CMake  
-  - Eigen3  
-  - gmsh  
-Update Eigen path in CMakeLists.txt accordingly
+  - CMake, Eigen3 and gmsh  
+  - MinGW  
+    - Download from https://sourceforge.net/projects/mingw/files/ (mingw-get)  
+    - Install the manager  
+    - Install `mingw32-base` and `mingw32-gcc-g++`  
+    - Add `\path\to\MinGW\mingw32\bin` to the `PATH` Environment Variable in Windows  
+Path setting (in CMakeLists.txt)  
+```cmake
+ELSEIF (WIN32)
+include_directories(include; /path/to/eigen)
+```
+Compilation
+```dos
+md build
+cd build
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+mingw32-make -j 4
+```
+Test
+```dos
+.\aero.exe ..\IO\N12.cfg ..\IO\N12.pts
+```
 
 ## Usage
 
