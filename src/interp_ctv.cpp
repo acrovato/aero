@@ -1,3 +1,22 @@
+/* 
+// Copyright 2018 University of Liege
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Authors:
+// - Adrien Crovato
+*/
+
 //// Interpolation from center to vertices
 // Interpolate linearly surface singularities from adjacent panel centers to panel vertices. If panel is on an edge of a
 // network, linear extrapolation is used instead
@@ -10,8 +29,6 @@
 //
 // Output:
 // - vis: Matrix of interpolate singularities (row = vertex number; col 0 = doublet, col 1 = source)
-
-/* Copyright (C) 2018 Adrien Crovato */
 
 #include <iostream>
 #include <Eigen/Dense>

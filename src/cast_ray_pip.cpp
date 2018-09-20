@@ -1,3 +1,22 @@
+/* 
+// Copyright 2018 University of Liege
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Authors:
+// - Adrien Crovato
+*/
+
 //// Ray casting and Point In Polygon test
 // Check that a given vector does not cross a given (body or wake) panel
 //
@@ -18,8 +37,6 @@
 //
 // Output:
 // - 0 (vector crosses the panel) OR 1 (vector does not cross the panel)
-
-/* Copyright (C) 2018 Adrien Crovato */
 
 #include <iostream>
 #include <Eigen/Dense>
