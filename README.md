@@ -1,6 +1,6 @@
 # Aero
 Adrien Crovato  
-ULiege, 2016-2017
+ULiege, 2016-2018
 
 ## Features and limitations
 
@@ -30,12 +30,12 @@ Test cases illustrating thoses results can be found in the documentation under t
 ### Cite us!
 If you use this work, please acknowledge the authors:  
 ```text 
-"Aero: a Field Panel Method for Aerodynamic Loads Computation in Preliminary Aircraft Design"
+"Aero - a Field Panel Method for Aerodynamic Loads Computation in Preliminary Aircraft Design" by Adrien Crovato, University of Liege
 ```  
 
 The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/227902 "http://hdl.handle.net/2268/227902"):
 ```text
-A. Crovato, G. Dimitriadi, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
+A. Crovato, G. Dimitriadis, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
 ```
   
 ## Compilation
@@ -126,7 +126,7 @@ Test
 
 ### Wing meshing
 
-The mesh file (second input file, see below) is ASCII formatted and can be written by hand. If you have access to [MATLAB](https://www.mathworks.com "https://www.mathworks.com"), a meshing script is given to facilitate the generation of the mesh file.  
+The mesh file (second input file, see below) is ASCII formatted and can be written by hand. If you have access to [MATLAB](https://www.mathworks.com "https://www.mathworks.com"), a meshing script is given to facilitate the generation of the mesh file. If you do not have MATLAB, an alternative is to try it with [GNU Octave](https://www.gnu.org/software/octave "https://www.gnu.org/software/octave") or to translate the script in Python.  
 In order to define a wing, the user must change the following parameters:  
 
 Files (ASCII Selig formatted) where the airfoils are defined:  
