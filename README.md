@@ -33,12 +33,12 @@ If you use this work, please acknowledge the authors:
 "Aero - a Field Panel Method for Aerodynamic Loads Computation in Preliminary Aircraft Design" by Adrien Crovato, University of Liege
 ```  
 
-The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/227902 "http://hdl.handle.net/2268/227902"):
+The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/ICAS_ARCHIVE/ICAS2018/data/preview/ICAS2018_0453.htm "https://www.icas.org/ICAS_ARCHIVE/ICAS2018/data/preview/ICAS2018_0453.htm") or on [Orbi](http://hdl.handle.net/2268/227902 "http://hdl.handle.net/2268/227902"):
 ```text
 A. Crovato, G. Dimitriadis, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
 ```  
 
-Note that Aero is distributed under the Apache License 2.0
+Note that Aero is distributed under the Apache License 2.0  
 [![Apache License Version 2.0](https://img.shields.io/badge/license-Apache_2.0-green.svg)](LICENSE)
   
 ## Compilation
