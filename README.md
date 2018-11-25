@@ -1,6 +1,8 @@
 # Aero
 Adrien Crovato  
-ULiege, 2016-2018
+ULiege, 2016-2018  
+
+![Naca0012](n12_example.png)
 
 ## Features and limitations
 
