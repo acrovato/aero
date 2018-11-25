@@ -36,7 +36,10 @@ If you use this work, please acknowledge the authors:
 The main paper about this work can be found in the 2018 [ICAS proceedings](https://www.icas.org/Papers_previous_congresses.html "https://www.icas.org/Papers_previous_congresses.html") or on [Orbi](http://hdl.handle.net/2268/227902 "http://hdl.handle.net/2268/227902"):
 ```text
 A. Crovato, G. Dimitriadis, V.E. Terrapon, University of Liège. *Higher Fidelity Transonic Aerodynamic Modeling in Preliminary Aircraft Design*, 31st Congress of the International Council of the Aeronautical Sciences (ICAS), 9-14th September 2018, Belo Horionte, Brazil.
-```
+```  
+
+Note that Aero is distributed under the Apache License 2.0
+[![Apache License Version 2.0](https://img.shields.io/badge/license-Apache_2.0-green.svg)](LICENSE)
   
 ## Compilation
 Aero is really simple to compile. It just needs to be linked to the pre-compiled (header based) Eigen library. All the configuration is handled by CMake, so you only need to adapt some path inside the CMakeLists.txt. Additionnaly, you may want to download gmsh to view some results during the post-processing.  
