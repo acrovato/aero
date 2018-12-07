@@ -13,44 +13,16 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-# Add a automated way to find Eigen...
-# Check OS and set path for header and source files
+# Check OS and add option
 IF(UNIX AND NOT APPLE)
-    include_directories(include; /usr/include/eigen3/)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
 ELSEIF(APPLE)
-    include_directories(include; /usr/local/include/eigen-3.3.5/)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DON_UNIX")
 ELSEIF(WIN32)
-    include_directories(include; C:/eigen-3.3.5/)
 ENDIF()
-set(SOURCE_FILES src/main.cpp
-        src/pre.cpp
-        src/read_config.cpp
-        src/read_sgrid.cpp
-        src/create_panel.cpp
-        src/create_wake.cpp
-        src/create_field.cpp
-        src/map_field.cpp
-        src/map_derivatives.cpp
-        src/cast_ray_pip.cpp
-        src/solver.cpp
-        src/id_subpanel.cpp
-        src/build_AIC.cpp
-        src/infcB.cpp
-        src/split_panel.cpp
-        src/infcFF.cpp
-        src/infcFB.cpp
-        src/solve_body.cpp
-        src/solve_field.cpp
-        src/compute_fVars.cpp
-        src/interp_ctv
-        src/interp_sp
-        src/interp
-        src/compute_sVars.cpp
-        src/post.cpp
-        src/write_sp.cpp
-        src/write_fv.cpp)
+
+# Set executable path
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../bin)
 
 # Specifiy default build type
 if( NOT CMAKE_BUILD_TYPE )
@@ -60,20 +32,25 @@ MinSizeRel."
        FORCE )
 endif()
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
-
 # Set verbose mode
 if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVERBOSE")
 endif()
-
-# Specifiy exe location
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
 # Set Release or Debug option
 IF(CMAKE_CXX_FLAGS_RELEASE OR CMAKE_CXX_FLAGS_RELWITHDEBINFO)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCMAKE_CXX_FLAGS=-O3")
 ELSEIF(CMAKE_CXX_FLAGS_DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCMAKE_CXX_FLAGS=-G -DCMAKE_CXX_FLAGS=-O2")
 ENDIF()
-add_executable(aero ${SOURCE_FILES})
+
+# Tell CMake where to find the module (find_package)
+LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake")
+
+# Find Eigen
+find_package(Eigen REQUIRED)
+include_directories(${EIGEN_INCLUDE_DIRS})
+
+# Set path for header and source files
+include_directories(include)
+ADD_SUBDIRECTORY(src)
 

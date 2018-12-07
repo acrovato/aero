@@ -44,7 +44,7 @@ Note that Aero is distributed under the Apache License 2.0
 [![Apache License Version 2.0](https://img.shields.io/badge/license-Apache_2.0-green.svg)](LICENSE)
   
 ## Compilation
-Aero is really simple to compile. It just needs to be linked to the pre-compiled (header based) Eigen library. All the configuration is handled by CMake, so you only need to adapt some path inside the CMakeLists.txt. Additionnaly, you may want to download gmsh to view some results during the post-processing.  
+Aero is really simple to compile. It just needs to be linked to the pre-compiled (header based) Eigen library. All the configuration is handled by CMake, so you only need to set an environment variable pointing to your Eigen folder with the command line. Additionnaly, you may want to download gmsh to view some results during the post-processing.  
 
 Links to packages  
 
@@ -62,10 +62,9 @@ sudo apt-get install cmake
 sudo apt-get install libeigen3-dev
 sudo apt-get install gmsh
 ```
-Path setting (in CMakeLists.txt)  
-```cmake
-IF (UNIX AND NOT APPLE)
-include_directories(include; /usr/include/eigen3)
+Path setting
+```bash
+export INCLUDE=/path/to/eigen
 ```
 Compilation
 ```bash
@@ -75,6 +74,7 @@ make -j 4
 ```
 Test
 ```bash
+cd ../bin
 ./aero ../IO/N12.cfg ../IO/N12.pts
 ```
 
@@ -86,10 +86,9 @@ Required packages
 ```bash
 xcode-select --install
 ```
-Path setting (in CMakeLists.txt)  
-```cmake
-IF (APPLE)
-include_directories(include; /path/to/eigen)
+Path setting
+```bash
+export INCLUDE=/path/to/eigen
 ```
 Compilation
 ```bash
@@ -99,6 +98,7 @@ make -j 4
 ```
 Test
 ```bash
+cd ../bin
 ./aero ../IO/N12.cfg ../IO/N12.pts
 ```
 
@@ -110,10 +110,9 @@ Required packages
       - install the manager  
       - install `mingw32-base` and `mingw32-gcc-g++`  
       - add `\path\to\MinGW\mingw32\bin` to the `PATH` Environment Variable in Windows  
-Path setting (in CMakeLists.txt)  
-```cmake
-ELSEIF (WIN32)
-include_directories(include; /path/to/eigen)
+Path setting
+```posh
+set INCLUDE=\path\to\eigen
 ```
 Compilation
 ```posh
@@ -124,6 +123,7 @@ mingw32-make -j 4
 ```
 Test
 ```posh
+cd ..\bin
 .\aero.exe ..\IO\N12.cfg ..\IO\N12.pts
 ```
 
